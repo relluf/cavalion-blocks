@@ -1,5 +1,5 @@
-"use strict";
 "use locale, util/net/Url, util/HotkeyManager";
+"use strict";
 
 var HotkeyManager = require("util/HotkeyManager");
 var Url = require("util/net/Url");
@@ -14,12 +14,9 @@ var locale = require("locale");
 	// }],
 	
 	/*- top-aligned */
-	[["Topbar"], "sessions", {}, [
-		
+	[["Topbar"], {}, [
 		[["Location"], ""],
-		
-		[["veldoffice/Session"], "veldoffice", {}]
-
+		[["veldoffice/Session"]]
 	]],
 	
 	/*- left-aligned, Shift+Cmd+0 */
@@ -27,13 +24,12 @@ var locale = require("locale");
 		toggleOn: "show", // function() { this.show(); }
 		toggleOff: "hide"
 	}, [
-		
+		/*- Shift+Cmd+1-9, Ctrl+F11 */
 		[["#tabs"], { vars: { tabs: [] } }, [
 			[["Tab"], { controls: "navigator", text: locale("Navigator") }],
 			[["Tab"], { controls: "recent", text: locale("Recent") }],
 			[["Tab"], { controls: "outline", text: locale("Outline") }]
 		]],
-
 		[["Navigator"], "navigator"],
 		[["Recent"], "recent"],
 		[["Outline"], "outline"]
