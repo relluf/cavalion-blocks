@@ -21,9 +21,13 @@ There's a new kid of the block! This project is born out of the need of:
 ---
 # Syntax
 	
-	Block = [["Base", "Mixins"], "name", {properties}, [children]]
+	Block = ["Base" || ["Base", "Mixins"], "name", {properties}, [children]]
 
 ![](https://i.snag.gy/NufTis.jpg)
+
+Even better like this:
+
+![](https://i.snag.gy/mdpjMv.jpg)
 
 # Array.prototype ( === Blocks?)
 
@@ -93,3 +97,14 @@ Velddata
 * app: 
 * local/field: latitude, longitude, altitude, photos, 
 * user:
+
+
+block := [base, name, properties, children]
+base := base | [base, mixin, mixin]
+
+- name
+- properties
+- children
+
+- parent
+- owner/tree
