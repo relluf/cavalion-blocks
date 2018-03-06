@@ -31,12 +31,13 @@ var handlers = {
 		});
 	}
 };
-
-[["vcl-ui:Tabs", { handlers: handlers }], {
+var bindings = {
 	tabs: {
 		get: function() {},
 		set: function() {}
 	}
-}];
+};
+
+["vcl-ui:Tabs", { handlers: handlers, bindings: bindings }];
 
 /*- wat je dus doet is een storage/customize-point introduceren */

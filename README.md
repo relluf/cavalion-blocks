@@ -11,6 +11,9 @@ There's a new kid of the block! This project is born out of the need of:
 * focus soley on the native-JS like way of doing this
 	* Object.create, real properties -and all-
 	* await, promise, etc.
+	
+![](https://i.snag.gy/Bb0fhd.jpg)
+	
 * use nicer/simpler Markdown-like (but JS) syntax
 * rewrite of Code
 	* rename to ide?
@@ -21,13 +24,18 @@ There's a new kid of the block! This project is born out of the need of:
 ---
 # Syntax
 	
-	Block = ["Base" || ["Base", "Mixins"], "name", {properties}, [children]]
-
-![](https://i.snag.gy/NufTis.jpg)
-
-Even better like this:
+*Block* := `["Base" || ["Base", "Mixins"], "name", {properties}, [children]];`
 
 ![](https://i.snag.gy/mdpjMv.jpg)
+
+Where it is assumed that Base (when it's a string value) is a reference to, either;
+
+* another Block (no namespace, default namespace)
+* a preconfiguraed constructor (specific namespace)
+
+
+![](https://i.snag.gy/1Iec27.jpg)
+
 
 # Array.prototype ( === Blocks?)
 
@@ -99,8 +107,8 @@ Velddata
 * user:
 
 
-block := [base, name, properties, children]
-base := base | [base, mixin, mixin]
+block := [inherits, name, properties, children]
+inherits := inherits | [base, mixin, mixin]
 
 - name
 - properties

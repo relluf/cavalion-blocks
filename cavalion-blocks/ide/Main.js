@@ -3,15 +3,24 @@
 
 var Data = require("Data");
 var locale = require("locale");
+var Tab = require("vcl/ui/Tab");
 
 var handlers = {
 	onLoad: function() {
 		var me = this, workspaces = this.scope().workspaces;
 		Data.bind([workspaces, "tabs"], {
 			to: function() {
-				
+				var tabs = workspaces._controls || [];
+				tabs.filter(_ => _ instanceof Tab).map(_ => ({
+					label: _.getText(), 
+					name: _.getVar("workspace")
+				}));
+				return tabs;
 			},
-			from: function() {
+			from: function(workspaces) {
+				workspaces.forEach(_ => me.qsa("#workspace-needed").execute(_));
+			},
+			update: function() {
 				
 			}
 		});
@@ -19,8 +28,12 @@ var handlers = {
 };
 
 
-["vcl-ui:Form", { handlers: handlers }, [
+["Page", { handlers: handlers }, [
 	
-	["vcl-ui:Tabs", "workspaces", { align: "bottom" }]
+	["Tabs", "workspaces", { align: "bottom" }]
 
-]];
+], {
+	
+	// Data.bind(ings);
+	
+}];

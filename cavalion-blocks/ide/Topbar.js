@@ -1,3 +1,3 @@
 "use strict";
 
-["vcl-ui/Bar", {}, []];
+["vcl-ui:Bar", { css: "background-color: red;"}, []];
