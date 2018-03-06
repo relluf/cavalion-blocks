@@ -1,0 +1,8 @@
+"use strict";
+
+["vcl:Application", {}, [
+	
+
+	
+	
+]];
