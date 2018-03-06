@@ -1,7 +1,9 @@
 "use strict";
 
-[[], {}, [
+[[
+	/*- client-aligned */
+	["./Main"],
 
-	[["./Workspaces"], "workspaces"]
-
+	/*- bottom-aligned */
+	["./Console"]
 ]];

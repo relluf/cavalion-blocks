@@ -6,6 +6,7 @@
 
 There's a new kid of the block! This project is born out of the need of:
 
+* to persist the structure (routes, models, translations, ...) of the app as meta data for the app itself
 * to reboot/refresh cavalion-vcl, remove dead wood (or at least hide it to evolve with a clean slate)
 * focus soley on the native-JS like way of doing this
 	* Object.create, real properties -and all-
@@ -51,5 +52,44 @@ Owner is the root of a scope.
 
 Dan kan je in principe 1 store hebben voor al je objecten. 
 
-	["bedrijf", "projectcode", "versie"].hash("md5");
+	["bedrijf", "projectcode", "versie"].hash(instance, "md5");
 
+## Remove Dead Wood
+
+cavalion-vcl is too bloated. Too much stuff of Borland's VCL is in there that doesn't make any sense. But, it works now and I don't want to spend too much time on it to improve it (just yet). So expose a clean interface [BLOCKS], which basically hides all VCL, or at least:
+* specific implementations
+* property definitions
+* 
+
+## Addressing
+
+	/ide/workspaces/code/sidebar:
+	-> ide/Workspace<code> #sidebar
+	-> ide/Workspace<> #sidebar
+	
+## Generating
+
+Generation is constant. Every block is a PouchDB document. Every save is a revision.
+	
+	
+	
+## Analogies
+
+* **Workspace** - **Project**s consist of **Folder**s, consisting **File**s, as such defining a set of **Path**s mapped to **Source**. **Type**s are assumed by code.
+
+* **Application** - **Root**s consist of **Block**s, consisting of **Component**s, as such defining...
+
+* **Bedrijf** (Workspace<Veldoffice>)
+
+	- [**Onderzoek**, **Locatie**] -> [**Waarneming**]
+
+	- [**Onderzoek**, **Code**] -> [**Document**]
+	- 
+	
+
+Velapps, Veldoffice, Veldapp, Workspace<Veldoffice>
+
+Velddata
+* app: 
+* local/field: latitude, longitude, altitude, photos, 
+* user:
