@@ -1,4 +1,9 @@
 define([], function() {
+	
+	/*- TODO
+		- make less cavalion-vcl specific
+		- implement another widget framework (pure HTML)
+	*/
 
     function mapArrFn(arr, fn) {
         return arr.map(function(item) {
@@ -8,13 +13,15 @@ define([], function() {
             return item;
         });
     }
-	    
+
 	var Blocks = {
 		POSTFIX_SPECIALIZED: "<>/",
-		PREFIX_PROTOTYPES: "cavalion-blocks/prototypes/",
+		PREFIX_PROTOTYPES: "blocks/prototypes/",
 		PREFIX_APP: "cavalion-blocks/",
 		DEFAULT_NAMESPACES: {
-			"vcl-ui": "vcl/ui"
+			"vcl": "vcl",
+			"vcl-ui": "vcl/ui",
+			"vcl-data": "vcl/data"
 		},
 		
         parseUri: function (uri) {
@@ -230,9 +237,25 @@ define([], function() {
         },
         
 	    parse: function(inherits, name, properties, children) {
-	    	if(typeof inherits === "string" && inherits.charAt(0) !== "#") {
-	    		if(inherits.indexOf(":") === -1) {
-	    			inherits = [inherits];
+			
+	    	if(typeof inherits === "string") {
+	    		if(inherits.charAt(0) !== "#") {
+		    		if(inherits.indexOf(":") === -1) {
+		    			inherits = [inherits];
+		    		}
+	    		} else {
+					if(name instanceof Array) {
+						children = name;
+						properties = {};
+					} else {
+						children = properties;
+						properties = name;
+					}
+					return {
+						name: inherits.substring(1),
+						properties: properties || {},
+						children: mapArrFn(children || [], arguments.callee)
+					};
 	    		}
 	    	}
 	    	

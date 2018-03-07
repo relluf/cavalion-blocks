@@ -83,6 +83,9 @@ cavalion-vcl is too bloated. Too much stuff of Borland's VCL is in there that do
 
 Generation is constant. Every block is a PouchDB document. Every save is a revision.
 	
+
+# If one could define property like accessors in Blocks
+	
 	
 	
 ## Analogies

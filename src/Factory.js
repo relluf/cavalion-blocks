@@ -51,6 +51,7 @@ define(function(require) {
 	var Type = require("js/Type");
 	var Method = require("js/Method");
 	var Deferred = require("js/Deferred");
+	var Component = require("vcl/Component");
 	var js = require("js");
 	var PropertyValue = parse.PropertyValue;
 
@@ -549,7 +550,6 @@ define(function(require) {
 			    });
 			},
 			require: function(name, callback, failback) {
-
 				var ocallback = callback;
 				if(ocallback && typeof name === "string") {
 					callback = function() {
@@ -559,7 +559,7 @@ define(function(require) {
 				}
 
 				if(typeof name === "string") {
-					return require([String.format("vcl/Factory!%s", name)], 
+					return require([String.format("blocks/Factory!%s", name)], 
 						callback, failback);
 				}
 
