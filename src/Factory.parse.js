@@ -99,8 +99,8 @@ define(function(require) {
 			return uri;
 		}
 
-		source = String.format("%s\n//# sourceURL=http://blocks-%s/%s.js", source,
-		    uri.indexOf(Blocks.PREFIX_PROTOTYPES) === 0 ? "prototypes" : "comps",
+		source = String.format("%s\n//# sourceURL=http://%s/%s.js", source,
+		    uri.indexOf(Blocks.PREFIX_PROTOTYPES) === 0 ? "blocks-prototypes" : "cavalion-blocks",
 		    devtoolsFriendly(uri));
 		tree.root = parse(source);
 		tree.root && adjust(tree.root);

@@ -1,10 +1,12 @@
-# [ B L O C K S ]
+# [ B L O C K S ] 
+
+`blocks-dot-js` `[].js`
 
 *blocks/prototypes === default-constructor === implicit-base*
 
 *user specific, scaffolding, templates, ...*
 
-There's a new kid of the block! This project is born out of the need of:
+This project is born out of the need of:
 
 * to persist the structure (routes, models, translations, ...) of the app as meta data for the app itself
 * to reboot/refresh cavalion-vcl, remove dead wood (or at least hide it to evolve with a clean slate)
@@ -14,7 +16,7 @@ There's a new kid of the block! This project is born out of the need of:
 	
 ![](https://i.snag.gy/Bb0fhd.jpg)
 	
-* use nicer/simpler Markdown-like (but JS) syntax
+* nicer/simpler/cleaner (Markdown-like?) syntax
 * rewrite of Code
 	* rename to ide?
 	* better Navigator
@@ -24,14 +26,17 @@ There's a new kid of the block! This project is born out of the need of:
 ---
 # Syntax
 	
-*Block* := `["Base" || ["Base", "Mixins"], "name", {properties}, [children]];`
+*Block* := `["classes", "name", {config}, Block[]];`
+
+* **classes** - (comma- and/or) whitespace-seperated list of class names
+* **name** - the name for the block, optional
 
 ![](https://i.snag.gy/mdpjMv.jpg)
 
-Where it is assumed that Base (when it's a string value) is a reference to, either;
+Where it is assumed that `inherits` (when it's a string value) is a reference to, either;
 
-* another Block (no namespace, default namespace)
-* a preconfiguraed constructor (specific namespace)
+* line 3 & 5: another Block (no namespace, default namespace)
+* line 9: a preconfigured constructor (specific namespace)
 
 
 ![](https://i.snag.gy/1Iec27.jpg)
@@ -119,3 +124,9 @@ inherits := inherits | [base, mixin, mixin]
 
 - parent
 - owner/tree
+- 
+
+
+BLOCKS loaded should pass-on inherited loaded
+----
+

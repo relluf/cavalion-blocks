@@ -1,4 +1,6 @@
-define([], function() {
+define(function(require) {
+	
+	var PouchDB = require("pouchdb");
 	
 	/*- TODO
 		- make less cavalion-vcl specific
@@ -13,6 +15,88 @@ define([], function() {
             return item;
         });
     }
+    function parseBlock(inherits, name, properties, children) {
+		var s = inherits;		
+    	if(typeof inherits === "string") {
+    		if(inherits.charAt(0) !== "#") {
+    			inherits = inherits.replace(/\s/g, "").replace(/,/g, " ").split(" ");
+    			if(inherits.length === 1 && inherits[0].indexOf(":") !== -1) {
+    				inherits = inherits.pop(); // !! inherits pops into another dimension :-D
+    			} else {
+	    			// namespaced ctors (eg. vcl-ui:Tab) **MUST** be single?
+	    			// console.log(s, inherits, name);
+	    			// inherits.forEach(function(s, index) {
+	    			// 	if(index > 0 && s.indexOf(":") !== -1) {
+	    			// 		throw new Error("Multiple constructors, what happened?");
+	    			// 	}
+	    			// });
+	    			if(inherits[0].indexOf(":") !== -1) {
+	    				inherits = inherits[0];
+	    			} else {
+	    				inherits = [inherits[0]];
+	    			}
+    			}
+    		} else {
+				if(name instanceof Array) {
+					children = name;
+					properties = {};
+				} else {
+					children = properties;
+					properties = name;
+				}
+				return {
+					name: inherits.substring(1),
+					properties: properties || {},
+					children: mapArrFn(children || [], arguments.callee)
+				};
+    		}
+    	}
+    	
+		if(arguments.length === 1 && inherits instanceof Array && inherits.length > 0) {
+			if(inherits[0] 
+				&& inherits[0].hasOwnProperty("name") 
+				&& inherits[0].hasOwnProperty("properties") 
+				&& inherits[0].hasOwnProperty("children")
+			) {
+				children = inherits;
+				properties = {};
+				name = "";
+				inherits = [];
+			}
+		}
+		
+		if(typeof inherits === "string" && inherits.charAt(0) === "@") {
+			return new PropertyValue(inherits.substring(1));
+		}
+		
+		if(typeof name !== "string") {
+			children = properties;
+			properties = name;
+			name = "";
+		}
+		if(properties instanceof Array) {
+			children = properties;
+			properties = {};
+		}
+		if(typeof inherits === "string") {
+			inherits = inherits.split("#");
+			if(inherits.length === 2) {
+				name = inherits[1];
+			}
+			inherits = inherits[0];
+			
+			if(inherits.endsWith("<>")) {
+				inherits = [inherits.split("<").shift()];
+			}
+		}
+		return {
+			inherits: inherits instanceof Array ? inherits : undefined,
+			className: typeof inherits === "string" ? inherits : undefined,
+			name: name,
+			properties: properties || {},
+			children: mapArrFn(children || [], arguments.callee)
+		};
+	}
 
 	var Blocks = {
 		POSTFIX_SPECIALIZED: "<>/",
@@ -23,6 +107,8 @@ define([], function() {
 			"vcl-ui": "vcl/ui",
 			"vcl-data": "vcl/data"
 		},
+		
+		db: new PouchDB("cavalion-blocks"),
 		
         parseUri: function (uri) {
             var r = {};
@@ -104,7 +190,7 @@ define([], function() {
                 }
                 return arr;
             }
-
+            
             var keys = Blocks.parseUri(uri);
 
             // ui/forms/persistence/View
@@ -129,8 +215,8 @@ define([], function() {
 
             // ui/forms/persistence/View<X.a>
             if (keys.specializer !== "") {
-                if (keys.specializer.indexOf(".") !== -1) {
-                    if ((keys.specializer = keys.specializer.split(".")[0]) !== "") {
+                if (keys.specializer.indexOf("#") !== -1) {
+                    if ((keys.specializer = keys.specializer.split("#")[0]) !== "") {
                         return Blocks.compileUri(keys);
                     }
                     // ui/forms/persistence/View<X/Y>
@@ -236,75 +322,8 @@ define([], function() {
             return String.format("[\"" + uris.join("\", \"") + "\"];");
         },
         
-	    parse: function(inherits, name, properties, children) {
-			
-	    	if(typeof inherits === "string") {
-	    		if(inherits.charAt(0) !== "#") {
-		    		if(inherits.indexOf(":") === -1) {
-		    			inherits = [inherits];
-		    		}
-	    		} else {
-					if(name instanceof Array) {
-						children = name;
-						properties = {};
-					} else {
-						children = properties;
-						properties = name;
-					}
-					return {
-						name: inherits.substring(1),
-						properties: properties || {},
-						children: mapArrFn(children || [], arguments.callee)
-					};
-	    		}
-	    	}
-	    	
-			if(arguments.length === 1 && inherits instanceof Array && inherits.length > 0) {
-				if(inherits[0] 
-					&& inherits[0].hasOwnProperty("name") 
-					&& inherits[0].hasOwnProperty("properties") 
-					&& inherits[0].hasOwnProperty("children")
-				) {
-					children = inherits;
-					properties = {};
-					name = "";
-					inherits = [];
-				}
-			}
-			
-			if(typeof inherits === "string" && inherits.charAt(0) === "@") {
-				return new PropertyValue(inherits.substring(1));
-			}
-			
-			if(typeof name !== "string") {
-				children = properties;
-				properties = name;
-				name = "";
-			}
-			if(properties instanceof Array) {
-				children = properties;
-				properties = {};
-			}
-			if(typeof inherits === "string") {
-				inherits = inherits.split("#");
-				if(inherits.length === 2) {
-					name = inherits[1];
-				}
-				inherits = inherits[0];
-				
-				if(inherits.endsWith("<>")) {
-					inherits = [inherits.split("<").shift()];
-				}
-			}
-			return {
-				inherits: inherits instanceof Array ? inherits : undefined,
-				className: typeof inherits === "string" ? inherits : undefined,
-				name: name,
-				properties: properties || {},
-				children: mapArrFn(children || [], arguments.callee)
-			};
-		}
+	    parse: parseBlock
 	};
-
+	
 	return Blocks;
 });

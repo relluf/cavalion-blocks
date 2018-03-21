@@ -13,7 +13,7 @@ var handlers = {
 				}));
 		});
 	},
-	onLoad: function() {
+	onLoad_: function() {
 		// selector: ide/Workspace<code> #sidebar
 		var parent = this;
 		Data.bind([this, "tabs"], function(local, remote) {

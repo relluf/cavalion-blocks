@@ -541,7 +541,7 @@ define(function(require) {
 			        return;
 			    }
 
-				requirejs.undef(String.format("vcl/Factory!%s", factory._uri));
+				requirejs.undef(String.format("blocks/Factory!%s", factory._uri));
 				requirejs.undef(Factory.makeTextUri(factory._uri));
 
 			    var factories = factory._root.inherits;
