@@ -16,7 +16,7 @@ define(function(require) {
         });
     }
     function parseBlock(inherits, name, properties, children) {
-		var s = inherits;		
+		var s = inherits;
     	if(typeof inherits === "string") {
     		if(inherits.charAt(0) !== "#") {
     			inherits = inherits.replace(/\s/g, "").replace(/,/g, " ").split(" ");
@@ -37,6 +37,7 @@ define(function(require) {
 	    			}
     			}
     		} else {
+    			// $i(...)
 				if(name instanceof Array) {
 					children = name;
 					properties = {};
@@ -52,7 +53,8 @@ define(function(require) {
     		}
     	}
     	
-		if(arguments.length === 1 && inherits instanceof Array && inherits.length > 0) {
+    	var isarr = inherits instanceof Array;
+		if(arguments.length === 1 && isarr && inherits.length > 0) {
 			if(inherits[0] 
 				&& inherits[0].hasOwnProperty("name") 
 				&& inherits[0].hasOwnProperty("properties") 
@@ -63,8 +65,13 @@ define(function(require) {
 				name = "";
 				inherits = [];
 			}
+		} else if(typeof inherits === "object" && !isarr) {
+			children = properties;
+			properties = name;
+			name = inherits;
+			inherits = [""];
 		}
-		
+
 		if(typeof inherits === "string" && inherits.charAt(0) === "@") {
 			return new PropertyValue(inherits.substring(1));
 		}
