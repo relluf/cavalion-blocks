@@ -56,8 +56,8 @@ define(function(require) {
 			 */
 			// Are we inheriting prototypes?
 			if(node.inherits instanceof Array) {
-				if(node.inherits.length === 0) {
-					// [[], ... ]
+				if((node.inherits.length === 1 && node.inherits[0] === "") || node.inherits.length === 0) {
+					// [[], ... ] or [[""], ... ] or ["", ... ] because that'll be adjusted to the 2nd form
 					node.inherits = Blocks.implicitBasesFor(uri);
 				}
 

@@ -1,7 +1,9 @@
 define(function(require) {
 	
-	var PouchDB = require("pouchdb");
+	require("stylesheet!./blocks.less");
 	
+	var PouchDB = require("pouchdb");
+
 	/*- TODO
 		- make less cavalion-vcl specific
 		- implement another widget framework (pure HTML)
@@ -33,7 +35,8 @@ define(function(require) {
 	    			if(inherits[0].indexOf(":") !== -1) {
 	    				inherits = inherits[0];
 	    			} else {
-	    				inherits = [inherits[0]];
+	    				/*- Seems to me that this is not necessary... */
+	    				// inherits = [inherits[0]];
 	    			}
     			}
     		} else {

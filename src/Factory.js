@@ -225,6 +225,7 @@ define(function(require) {
 					/* Bad news */
 					throw new Error(String.format("This component class does " +
 						"not know its constructor (%s)", this._uri));
+					// this._root.ctor = Component;
 				}
 
 				if(uri !== undefined) {
