@@ -1,7 +1,51 @@
-"veldoffice/leaflet/Map";
-"use strict";
+"leaflet/Crs, leaflet/layers/28992, util/Browser, util/HtmlElement";
+// "use strict";
 
-var MapFactory = require("veldoffice/leaflet/Map");
+var Layers = require("leaflet/layers/28992");
+var Crs = require("leaflet/Crs");
+
+var Keyboard = require("util/Keyboard");
+var Browser = require("util/Browser");
+var HE = require("util/HtmlElement");
+
+var js = window.js;
+var L = window.L;
+
+function createMap(mapDomNode, mapOptions, options) {
+	var touch = "ontouchstart" in window;
+	
+	mapOptions = js.mixIn({ zoomControl: false, attributionControl: false,
+		preferCanvas: !true }, mapOptions || {});
+    
+    if(mapOptions.crs === undefined) {
+    	// Assume RD by default (for Veldoffice anyways)
+    	mapOptions.crs = Crs.RD;
+    }
+	
+    var map = L.map(mapDomNode, mapOptions);
+    options = options || {};
+
+    if(Browser.ios !== true && Browser.android !== true) {
+		/*- TODO move to Map.page */
+		HE.addClass(mapDomNode, "desktop");
+    }
+
+		L.control.layers(options.layers || {
+			openbasiskaart: Layers.openbasiskaart().addTo(map),
+			// luchtfoto2017: Layers.luchtfoto2017().addTo(map),
+			// bgtlijngericht: Layers.bgtlijngericht().addTo(map),
+			// bgtpastel: Layers.bgtpastel().addTo(map)
+		});//.addTo(map);
+
+	if(options.scale !== false) {
+        L.control.scale({imperial: false}).addTo(map);
+	}
+
+	return map;
+}
+
+var KEY_LEFT = Keyboard.getKeyCode("KEY_LEFT");
+var KEY_RIGHT = Keyboard.getKeyCode("KEY_RIGHT");
 
 var styles = {
 	"#map-container": {
@@ -58,14 +102,74 @@ var styles = {
 };
 var handlers = {
 	"map-ready": function() {
-		// MeetpuntView.refresh(this);
+		var me = this;
+		var map = this.vars("map");
+
+		this.vars("state", {
+			views: [],
+			viewIndex: -1
+		});
+		
+			function block() {			
+				// me.qs("#state-write").execute();
+				
+				map.$blocked = true;
+				map.once("moveend", function() {
+					setTimeout(function() {
+						delete map.$blocked;
+					}, 100);
+				});
+			}
+			
+		this.readStorage("state", function(state) {
+			if(state && !((state = js.parse(state)) instanceof Error)) {
+				me.vars("state", state);
+
+				var view = state.views[state.viewIndex];
+				if(view) {
+					block();
+					map.setView(view[0], view[1]);
+				}
+			}
+		});
+		
 	},
-	"#map-container nodecreated": function() {
+	"map-moveend": function() {
+		var me = this;
+		var map = me.vars("map");
+		var state = me.vars("state");
+		
+		if(map.$blocked) {
+			console.log("moveend blocked");
+			return;
+		}
+		
+		
+		this.setTimeout("viewchanged", function() {
+			
+			var center = map.getCenter();
+			var zoom = map.getZoom();
+			var index = state.viewIndex;
+			
+			var view = index !== -1 ? state.views[index] : null;
+			if(view === null || view[0][0] !== center.lat || view[0][1] !== center.lng || view[1] !== zoom) {
+				state.views.splice(state.viewIndex + 1);
+				state.viewIndex = state.views.push([[center.lat, center.lng], zoom]) - 1;
+				me.qs("#state-write").execute();
+			}
+		}, 200);
+	},
+	"#map-container onNodeCreated": function() {
 		var root = this._owner;
-		var map = MapFactory.initialize(this._node.childNodes[0], {
+		var map = createMap(this._node.childNodes[0], {
 	 		center: [52, 5.3],
-			zoom: 2,
+			zoom: 2
 		}, {});
+		
+		["zoomlevelschange", "resize", "unload", "viewreset", "load", "zoomstart", "movestart", "zoom", "move", "zoomend", "moveend"].forEach(function(name) {
+					map.on(name, function() { root.emit("map-" + name, arguments); });
+				});
+		
 		root.vars("map", map);
 		root.emit("map-ready", []);
 	},
@@ -79,11 +183,58 @@ var handlers = {
 	'#map-container onResize': function() {
 		var map = this._owner.vars("map");
 		map && map.invalidateSize();
+	},
+	"#map-container onKeyUp": function(evt) {
+		var me = this._owner;
+		if(evt.altKey === true) {
+			var state = me.vars("state");
+			var map = me.vars("map"), view;
+
+			function block() {			
+				me.qs("#state-write").execute();
+				
+				map.$blocked = true;
+				map.once("moveend", function() {
+					setTimeout(function() {
+						delete map.$blocked;
+					}, 0);
+				});
+			}
+			
+			if(map.$blocked) {
+				console.log("blocked");
+				return;
+			}
+
+			if(evt.keyCode === KEY_LEFT) {
+				if(state.viewIndex > 0) {
+					view = state.views[--state.viewIndex];
+					block();
+					map.setView(view[0], view[1]);
+				}
+			} else if(evt.keyCode === KEY_RIGHT) {
+				if(state.viewIndex < state.views.length - 1) {
+					view = state.views[++state.viewIndex];
+					block();
+					map.setView(view[0], view[1]);
+				}
+			}
+		}
 	}
 };
 
 ["Container", { css: styles, handlers: handlers }, [
-    ["Bar", "menubar", {}],
+
+	["Executable", "state-write", {
+		onExecute: function() {
+			var me = this._owner;
+			var state = me.vars("state");
+			state.count = state.views.length;
+			me.writeStorage("state", JSON.stringify(state));
+		}
+	}],
+	
+    // ["Bar", "menubar", {}],
     ["Container", "map-container", {
     	content: "<div class='map' style='position:absolute;'></div>"
     }]
