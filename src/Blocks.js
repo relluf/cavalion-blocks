@@ -22,7 +22,7 @@ define(function(require) {
     	if(typeof inherits === "string") {
     		if(inherits.charAt(0) !== "#") {
     			inherits = inherits.replace(/\s/g, "").replace(/,/g, " ").split(" ");
-    			if(inherits.length === 1 && inherits[0].indexOf(":") !== -1) {
+    			if(inherits.length === 1 && inherits[0].indexOf(":") !== -1 && inherits[0].indexOf("vcl-comps:") !== 0) {
     				inherits = inherits.pop(); // !! inherits pops into another dimension :-D
     			} else {
 	    			// namespaced ctors (eg. vcl-ui:Tab) **MUST** be single?
@@ -32,12 +32,12 @@ define(function(require) {
 	    			// 		throw new Error("Multiple constructors, what happened?");
 	    			// 	}
 	    			// });
-	    			if(inherits[0].indexOf(":") !== -1) {
-	    				inherits = inherits[0];
-	    			} else {
+	    			// if(inherits[0].indexOf(":") !== -1) {
+	    				// inherits = inherits[0];
+	    			// } else {
 	    				/*- Seems to me that this is not necessary... */
 	    				// inherits = [inherits[0]];
-	    			}
+	    			// }
     			}
     		} else {
     			// $i(...)

@@ -52,6 +52,7 @@ define(function(require) {
 	var Method = require("js/Method");
 	var Deferred = require("js/Deferred");
 	var Component = require("vcl/Component");
+	var VclFactory = require("vcl/Factory"); 
 	var js = require("js");
 	var PropertyValue = parse.PropertyValue;
 
@@ -223,9 +224,9 @@ define(function(require) {
                 
 				if(this._root.ctor === undefined) {
 					/* Bad news */
-					throw new Error(String.format("This component class does " +
-						"not know its constructor (%s)", this._uri));
-					// this._root.ctor = Component;
+					// throw new Error(String.format("This component class does " + "not know its constructor (%s)", this._uri));
+					this._root.ctor = Component;
+					// TODO make ["", ... ] work without this code
 				}
 
 				if(uri !== undefined) {
@@ -478,6 +479,13 @@ define(function(require) {
 			implicit_sources: {},
 
 			load: function(name, parentRequire, load, config) {
+				if(name.indexOf("vcl-comps:") === 0) {
+					// #1453 (duck-typing VclFactory vs BlocksFactory)
+					return VclFactory.load(name.substring(10), parentRequire, function() {
+						return load.apply(this, arguments);
+					}, config);
+				}
+				
 				/** @overrides http://requirejs.org/docs/plugins.html#apiload */
 				var sourceUri = Factory.makeTextUri(name);
 

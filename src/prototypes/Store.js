@@ -1,7 +1,12 @@
-["Container", [
+"use strict";
 
-	["Bar", [
-		["vcl-ui:Button", { content: "Hello" }]	
-	]]
+["", [
+
+
+], {
+
+	put: function(namespace, key, values) {
+		
+	}
 	
-]]
+}];

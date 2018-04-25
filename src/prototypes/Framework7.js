@@ -1,4 +1,4 @@
-"use Framework7, text!blocks/prototypes/Framework7-root.html, refreshDom, pages/Controller";
+"use Framework7, text!blocks/prototypes/Framework7-root.html, stylesheet!blocks/prototypes/Framework7.less, refreshDom, pages/Controller";
 "use strict";
 
 	function ms(name) { 
@@ -159,11 +159,14 @@
 
 var Framework7 = require("Framework7");
 var html = require("text!blocks/prototypes/Framework7-root.html");
-
 var styles = {
 	"#root": {
 		"background-color": "#f0f0f0",
-		".view": "top:0;bottom:0;right:0;left:0;position:absolute;"
+		"font-family": "-apple-system, SF UI Text, Helvetica Neue, Helvetica, Arial, sans-serif",
+		".view": "top:0;bottom:0;right:0;left:0;position:absolute;",
+		".menu-icon": "color: white; padding: 4px 2px; border-radius: 6px; border: 1px solid transparent; box-sizing: content-box;",
+		".page-content .button-block": "display: flex;",
+		".page-content .button-block a": "margin-right: 8px; margin-left: 8px; flex: 1;"
 	}
 };
 var vars = {
