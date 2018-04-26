@@ -1,9 +1,6 @@
-"use Framework7, text!blocks/prototypes/Framework7-root.html, stylesheet!blocks/prototypes/Framework7.less, refreshDom, pages/Controller";
+"use Framework7, text!blocks/prototypes/Framework7-root.html, stylesheet!blocks/prototypes/Framework7.less, pages/Controller";
 "use strict";
 
-	function ms(name) { 
-		return "pages/Modem-settings/" + name + ".html"; 
-	}
 	function rest_uri() {
 		var serial = (window.location.search.split('s=')[1]||'').split('&')[0];
 		var l = window.location.toString().replace(/;/g, "?").split("?")[0].split("/");
@@ -19,7 +16,6 @@
 	
 		return l + "rest/unsecure/modems/" + serial + "/";
 	}
-
 	(function() {
 		
 		var js = window.js;
@@ -160,50 +156,56 @@
 var Framework7 = require("Framework7");
 var html = require("text!blocks/prototypes/Framework7-root.html");
 var styles = {
+	"&.floating": "box-shadow:rgba(0, 0, 0, 0.4) 0px 3px 14px 0px;background-color:transparent; -webkit-backdrop-filter: blur(10px); z-index:999999;",
+	"&.rounded": "border-radius: 12px;",
+	"&:not(.safari)": {
+		".router-transition-css-backward": {
+			".page,.page-content": "background-color: rgba(239,239,244,0.85);"
+		},
+		".router-transition-css-forward": {
+			".page,.page-content": "background-color: rgba(239,239,244,0.85);"
+		},
+		// ".view .page-previous": "transition: opacity 450ms; opacity: 1;",
+		".view:not(.router-transition-css-backward) .page-previous": "opacity: 0;"
+	},
+	"&.safari": {
+		".page,.page-content": "background-color: rgba(239,239,244,0.25); -webkit-backdrop-filter: blur(10px);",
+		".navbar": "background-color:rgba(247, 247, 248, 0.85); -webkit-backdrop-filter: blur(10px);"
+	},
 	"#root": {
-		"background-color": "#f0f0f0",
+		"background-color": "transparent",
 		"font-family": "-apple-system, SF UI Text, Helvetica Neue, Helvetica, Arial, sans-serif",
 		".view": "top:0;bottom:0;right:0;left:0;position:absolute;",
 		".menu-icon": "color: white; padding: 4px 2px; border-radius: 6px; border: 1px solid transparent; box-sizing: content-box;",
 		".page-content .button-block": "display: flex;",
 		".page-content .button-block a": "margin-right: 8px; margin-left: 8px; flex: 1;"
-	}
-};
-var vars = {
-	routes: [
-		{path: "/", componentUrl: "pages/Main.html"},
-		{path: "/settings/location/", componentUrl: ms("location")},
-		{path: "/settings/allportsic/", componentUrl: ms("allportsic")},
-		{path: "/settings/topport/", componentUrl: ms("topport")},
-		{path: "/settings/topportparameter/:id", componentUrl: ms("topportparameter")},
-		{path: "/settings/ext_eswsensor/", componentUrl: ms("ext_eswsensor")},
-		{path: "/settings/ext_powersupply/", componentUrl: ms("ext_powersupply")},
-		{path: "/settings/ext_interfacetype/", componentUrl: ms("ext_interfacetype")},
-		{path: "/settings/requestconfirmconfiguration/", componentUrl: ms("requestconfirmconfiguration")},
-		{path: "/settings/newbattery/", componentUrl: ms("newbattery")},
-		{path: "/settings/battery/", componentUrl: ms("battery")},
-		{path: "/settings/emailaddress/:index/", componentUrl: ms("emailaddress")},
-		{path: "/settings/interval/:name/", componentUrl: ms("interval")}
-	]
+	},
+	".page,.page-content": "background-color: rgba(239,239,244,0.65);",
+	".navbar": "background-color:rgba(247, 247, 248, 0.97);",
+	".list ul": "background-color: rgba(255, 255, 255, 0.75);"
 };
 var handlers = {
 	
 	"#root show": function() {
-		var vars = this._owner.vars();
-		if(vars.fw7) return;
+		var owner = this._owner;
+		var vars = owner.vars();
 		
+		if(vars.fw7) return;
+
 		vars.fw7 = new Framework7({
 			root: vars.node || this._node,
 			theme: vars.theme || "ios" || "auto",
 			routes: vars.routes || []
 		});
 		
-		// TODO where does this come from?
+		// TODO where does this come from? -> framework7.js
 		document.documentElement.classList.remove("ios");
+		
+		owner.emit("fw7-ready", [{}]);
 	}
 };
 
-["Container", { handlers: handlers, vars: vars, css: styles }, [
+["Container", { handlers: handlers, css: styles }, [
 
 	["Container", "root", { classes: "ios", content: html }]		
 	

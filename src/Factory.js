@@ -118,6 +118,11 @@ define(function(require) {
                         deps = source.substring(1, i).replace(/\s/g, "");
                         deps = deps.split(",");
                         
+                        var path = js.normalize(this._uri, ".");
+                        deps = deps.map(function(dep) {
+                        	return dep.indexOf("./") === 0 ? path + dep.substring(1) : dep;
+                        });
+                        
                         /*- require all dependecies */
                         var me = this;
                         return this._parentRequire(deps, function() {
