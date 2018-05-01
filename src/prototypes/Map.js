@@ -70,10 +70,10 @@ var KEY_LEFT = Keyboard.getKeyCode("KEY_LEFT");
 var KEY_RIGHT = Keyboard.getKeyCode("KEY_RIGHT");
 
 var styles = {
+	"border-top": "1px solid silver",
+	".map": "top:0;left:0;bottom:0;right:0;position:absolute;",
+	overflow: "hidden",
 	"#map-container": {
-		"border-top": "1px solid silver",
-		".map": "top:0;left:0;bottom:0;right:0;position:absolute;",
-		overflow: "hidden",
 		// ">div.map": "left:0;top:0;right:0;bottom:0;position:absolute;",
 		// ".leaflet-marker-icon.leaflet-marker-draggable": {
 		//     "transition": "margin-top 0.1s"
@@ -123,6 +123,10 @@ var styles = {
 	}
 };
 var handlers = {
+	"loaded": function() {
+		this.vars("updating", 0);
+		this.qsa("Executable<>#loaded").execute();
+	},
 	"map-ready": function() {
 		var me = this;
 		var map = this.vars("map");
@@ -138,7 +142,9 @@ var handlers = {
 			} else {
 				me.qsa("#state-persist").execute();
 			}
+			me.qsa("Executable<>#map-ready").execute({map: map, state: state});
 		});
+		
 	},
 	"map-moveend": function() {
 		if(isUpdating(this)) return;
@@ -155,9 +161,16 @@ var handlers = {
 			
 			this.qsa("#state-persist").execute();
 		}
-	},
-	"#map-container onNodeCreated": function() {
-		var root = this._owner;
+	}
+};
+
+["Container", { 
+	css: styles, 
+	handlers: handlers,
+    content: "<div class='map' style='position:absolute;'></div>",
+    
+   	onNodeCreated: function() {
+		var me = this;
 		var map = createMap(this._node.childNodes[0], {
 	 		center: [52, 5.3],
 			zoom: 2
@@ -165,19 +178,19 @@ var handlers = {
 		
 		["zoomlevelschange", "resize", "unload", "viewreset", "load", "zoomstart", "movestart", "zoom", "move", "zoomend", "moveend"].forEach(function(name) {
 					map.on(name, function() { 
-						root.emit("map-" + name, arguments); 
+						me.emit("map-" + name, arguments); 
 					});
 				});
 		
-		root.vars("map", map);
-		root.emit("map-ready", []);
+		me.vars("map", map);
+		me.emit("map-ready", []);
 	},
-	'#map-container onLoad': function() {
-		var me = this._owner;
+	onLoad: function() {
+		var me = this;
 		this.override("visibleChanged", function() {
 			beginUpdate(me);
 			try {
-	    		var map = this.getVar("map", true);
+	    		var map = me.getVar("map", true);
 	    		map && map.invalidateSize();
 				return this.inherited(arguments);
 			} finally {
@@ -185,17 +198,17 @@ var handlers = {
 			}
 		});
 	},
-	'#map-container onResize': function() {
-		beginUpdate(this._owner);
+	onResize: function() {
+		beginUpdate(this);
 		try {
-			var map = this._owner.vars("map");
+			var map = this.vars("map");
 			map && map.invalidateSize();
 		} finally {
-			endUpdate(this._owner);
+			endUpdate(this);
 		}
 	},
-	"#map-container onKeyUp": function(evt) {
-		var me = this._owner;
+	onKeyUp: function(evt) {
+		var me = this;
 		var state = me.vars("state");
 		var map = me.vars("map"), view;
 
@@ -221,9 +234,8 @@ var handlers = {
 			}
 		}
 	}
-};
-
-["Container", { css: styles, handlers: handlers, vars: "updating: 0;" }, [
+ 
+}, [
 
 	["Executable", "state-persist", {
 		onExecute: function() {
@@ -233,10 +245,5 @@ var handlers = {
 				me.writeStorage("state", JSON.stringify(state));
 			}, 200);
 		}
-	}],
-	
-    // ["Bar", "menubar", {}],
-    ["Container", "map-container", {
-    	content: "<div class='map' style='position:absolute;'></div>"
-    }]
+	}]
 ]];
