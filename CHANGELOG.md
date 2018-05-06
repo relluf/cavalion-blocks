@@ -1,3 +1,8 @@
+### 2018-05-05
+- Introducing `tools/devtools/Editor<md>/ImageSnagger`
+- Developing devtools/Editor<html>
+- Introducing `cavalion-blocks/Tree`
+
 ### 2018-04-25
 - Bridging cavalion-blocks and vcl-comps:
 
