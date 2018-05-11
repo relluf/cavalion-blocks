@@ -1,5 +1,9 @@
+### 2018-05-10
+- Fix for test/MultipleClasses
+- Removed blocks.less
+
 ### 2018-05-05
-- Introducing `tools/devtools/Editor<md>/ImageSnagger`
+- Introducing `tools/devtools/Editor<md>/ImageSnagger` and `tools/devtools/Editor<md>/PostParser`
 - Developing devtools/Editor<html>
 - Introducing `cavalion-blocks/Tree`
 
