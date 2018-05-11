@@ -329,7 +329,7 @@ define(function(require) {
             	return uris.indexOf(uri) === index;
             });
             
-            return String.format("[\"" + uris.join("\", \"") + "\"];");
+            return String.format("[[\"" + uris.join("\", \"") + "\"]];");
         },
         
 	    parse: parseBlock
