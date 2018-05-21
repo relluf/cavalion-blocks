@@ -56,7 +56,8 @@ define(function(require) {
 	var js = require("js");
 	var PropertyValue = parse.PropertyValue;
 
-	var namespaces = js.mixIn(Blocks.DEFAULT_NAMESPACES);
+	// var namespaces = js.mixIn(Blocks.DEFAULT_NAMESPACES);
+	var namespaces = Blocks.DEFAULT_NAMESPACES;
 
 	function walk(node, f) {
 		f(node);
@@ -67,6 +68,9 @@ define(function(require) {
 	function getClassName(className) {
 		if(className.indexOf(":") !== -1) {
 			className = className.split(":");
+			if(className[0].indexOf("<") !== -1) {
+				return className.join(":");
+			}
 			if(namespaces[className[0]] === undefined) {
 				throw new Error(String.format("Unknown namespace %s (%s)",
 						className[0], js.keys(namespaces)));
@@ -86,11 +90,13 @@ define(function(require) {
 			_uri: "",
 			_root: null,
 			_sourceUri: null,
+			_setIsRoot: true,
 
-			constructor: function(parentRequire, uri, sourceUri) {
+			constructor: function(parentRequire, uri, sourceUri, setIsRoot) {
 				this._parentRequire = parentRequire;
 				this._uri = uri;
 				sourceUri && (this._sourceUri = sourceUri);
+				arguments.length === 4 && (this._setIsRoot = setIsRoot);
 			},
 			toString: function() {
                 return String.format("%n#%s#%d", this.constructor, this._uri, 
@@ -107,7 +113,7 @@ define(function(require) {
 				return "text!" + uri;
 			},
 			load: function(source, success, failure) {
-                if(source.charAt(0) === "\"" && source.indexOf("\"use strict\";") !== 0) {
+                if(source && source.charAt && source.charAt(0) === "\"" && source.indexOf("\"use strict\";") !== 0) {
                 	if(source.indexOf("\"use ") === 0) {
                 		// TODO this should be the default
                 		source = "\"" + source.substring(5);
@@ -265,7 +271,7 @@ define(function(require) {
                     component.beginLoading();
                     component.setUri(this._uri);
                     component.setName(this._root.name);
-                    component.setIsRoot(true);
+                    component.setIsRoot(this._setIsRoot);
                     component.setOwner(owner || null);
 
 					this.apply(component, component, this._root, applied, fixUps);
@@ -540,6 +546,7 @@ define(function(require) {
 			    if(uri.indexOf(Blocks.PREFIX_PROTOTYPES) !== 0) {
 		        	uri = Blocks.PREFIX_APP + uri;
 			    }
+	        	uri.replace(/\/\//g, "/");
 				return uri;
 			},
 			makeTextUri: function(uri, suffix) {

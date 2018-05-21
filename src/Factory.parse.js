@@ -27,7 +27,10 @@ define(function(require) {
 	        });
 	    }
 	    
-		var r = eval(arguments[0]);
+	    var r = arguments[0];
+	    if(!(r instanceof Array)) {
+			r = eval(r);
+	    }
 		if(r instanceof Array) {
 		    r = Blocks.parse.apply(Blocks, r);
 		}
@@ -99,9 +102,11 @@ define(function(require) {
 			return uri;
 		}
 
-		source = String.format("%s\n//# sourceURL=http://%s/%s.js", source,
-		    uri.indexOf(Blocks.PREFIX_PROTOTYPES) === 0 ? "blocks-prototypes" : "cavalion-blocks",
-		    devtoolsFriendly(uri));
+		if(!(source instanceof Array)) {
+			source = String.format("%s\n//# sourceURL=http://%s/%s.js", source,
+			    uri.indexOf(Blocks.PREFIX_PROTOTYPES) === 0 ? "blocks-prototypes" : "cavalion-blocks",
+			    devtoolsFriendly(uri));
+		}
 		tree.root = parse(source);
 		tree.root && adjust(tree.root);
 		return tree;
