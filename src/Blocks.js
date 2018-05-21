@@ -3,6 +3,7 @@ define(function(require) {
 	require("stylesheet!./blocks.less");
 	
 	var PouchDB = require("pouchdb");
+	var Factory;
 
 	/*- TODO
 		- make less cavalion-vcl specific
@@ -22,9 +23,16 @@ define(function(require) {
     	if(typeof inherits === "string") {
     		if(inherits.charAt(0) !== "#") {
     			inherits = inherits.replace(/\s/g, "").replace(/,/g, " ").split(" ");
-    			if(inherits.length === 1 && inherits[0].indexOf(":") !== -1 && inherits[0].indexOf("vcl-comps:") !== 0) {
-    				inherits = inherits.pop(); // !! inherits pops into another dimension :-D
-    			} else {
+
+    			// ["Container", {}]
+    			// ["vcl-comps:devtools/Workspace", "vcl"]
+    			// ["Query<devtools/Resource>", { vars: {} }]
+    			// ["vcl-ui:Button", { content: "" }]
+    			// ["Render<vcl-ui:Node>", { vars: {} }]
+
+    			if(inherits.length === 1 && inherits[0].indexOf(":") !== -1 && inherits[0].indexOf("vcl-comps:") !== 0 && inherits[0].indexOf("<") === -1) {
+					inherits = inherits.pop(); // !! inherits pops into another dimension :-D
+				} else {
 	    			// namespaced ctors (eg. vcl-ui:Tab) **MUST** be single?
 	    			// console.log(s, inherits, name);
 	    			// inherits.forEach(function(s, index) {
@@ -330,6 +338,26 @@ define(function(require) {
             });
             
             return String.format("[[\"" + uris.join("\", \"") + "\"]];");
+        },
+        
+        instantiate: function(source, uri, sourceUri) {
+        	Factory = Factory || require("blocks" + "/Factory");
+        	
+        	var factory = new Factory(require, uri || "<inline>", sourceUri, false);
+        	var p = new Promise(function(resolve, reject) {
+        		factory.load(source, function() {
+        			//resolve.apply(this, arguments);
+        			try {
+        				resolve(factory.newInstance());
+        			} catch(e) {
+        				reject(e);
+        			}
+        		}, function() {
+        			reject.apply(this, arguments);
+        		});
+        	});
+        	
+        	return p;
         },
         
 	    parse: parseBlock
