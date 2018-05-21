@@ -1,3 +1,3 @@
 "use strict";
-
-["vcl:Component", {}];
+console.warn("loaded prototypes/.js");
+["vcl:Component-parentIsOwner", {}]; // TODO blocks/Superblock?

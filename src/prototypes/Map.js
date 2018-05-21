@@ -1,4 +1,4 @@
-"leaflet/Crs, leaflet/layers/28992 ,util/Browser, util/HtmlElement";
+"leaflet/Crs, leaflet/layers/28992, leaflet/plugins/markercluster, util/Browser, util/HtmlElement";
 // "use strict";
 
 var Layers = require("leaflet/layers/28992");
@@ -125,6 +125,7 @@ var styles = {
 var handlers = {
 	"loaded": function() {
 		this.vars("updating", 0);
+		// should move this to Blocks/.js
 		this.qsa("Executable<>#loaded").execute();
 	},
 	"map-ready": function() {
@@ -134,7 +135,7 @@ var handlers = {
 		var center = map.getCenter();
 		var zoom = map.getZoom();
 		this.vars("state", { views: [[[center.lat, center.lng], zoom]], viewIndex: 0 });
-		
+	
 		this.readStorage("state", function(state) {
 			if(state && !((state = js.parse(state)) instanceof Error)) {
 				me.vars("state", state);
@@ -164,7 +165,7 @@ var handlers = {
 	}
 };
 
-["Container", { 
+["Container, Store", { 
 	css: styles, 
 	handlers: handlers,
     content: "<div class='map' style='position:absolute;'></div>",
@@ -173,7 +174,7 @@ var handlers = {
 		var me = this;
 		var map = createMap(this._node.childNodes[0], {
 	 		center: [52, 5.3],
-			zoom: 2
+			zoom: 2, maxZoom: 17
 		}, {});
 		
 		["zoomlevelschange", "resize", "unload", "viewreset", "load", "zoomstart", "movestart", "zoom", "move", "zoomend", "moveend"].forEach(function(name) {
@@ -181,9 +182,47 @@ var handlers = {
 						me.emit("map-" + name, arguments); 
 					});
 				});
-		
-		me.vars("map", map);
-		me.emit("map-ready", []);
+				
+			var cluster = L.markerClusterGroup({
+				disableClusteringAtZoom: 13,
+				// chunkedLoading: true,
+				// chunkDelay: 100,
+				// chunkProgress: function(processed, total, elapsed, layersArray) {
+				// 	var progress = $$('.markers-progress', container)[0];
+				// 	var progressBar = $$('.markers-progress-bar', container)[0];
+					
+				// 	if (elapsed > 100) {
+				// 		// if it takes more than a second to load, display the progress bar:
+				// 		progress.style.display = 'block';
+				// 		progressBar.style.width = Math.round(processed/total*100) + '%';
+				// 	}
+				// 	if (processed === total) {
+				// 		// all markers processed - hide the progress bar:
+				// 		progress.style.display = '';
+				// 	}
+				// }
+	        });
+			window.cluster = cluster;
+	        cluster.addTo(map);
+
+	// var markers = [];
+	// function addToCluster(marker) {
+	// 	markers.push(marker);
+	// 	me.setTimeout(function() { 
+	// 		markers.forEach(marker => marker.remove());
+	// 		cluster.addLayers(markers); 
+	// 		markers = []; 
+	// 	}, 100);
+	// }
+	        
+			var addLayer = map.addLayer;
+			map.addLayer = function(layer) {
+				return addLayer.apply(this, arguments);
+			};
+			
+			me.vars("map", map);
+			me.emit("map-ready", []);
+			
 	},
 	onLoad: function() {
 		var me = this;
