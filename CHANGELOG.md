@@ -1,3 +1,7 @@
+### 2018-05-21
+- Developing the QSR pattern
+- Introducing Blocks.instantiate(), vcl:Component-parentIsOwner
+
 ### 2018-05-10
 - Fix for test/MultipleClasses
 - Removed blocks.less
