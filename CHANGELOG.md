@@ -1,3 +1,7 @@
+### 2018-08-21 - 0.8.2
+- Wow, it has been three months
+- Using cavalion-blocks in v7-maps
+
 ### 2018-05-21
 - Developing the QSR pattern
 - Introducing Blocks.instantiate(), vcl:Component-parentIsOwner

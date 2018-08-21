@@ -126,7 +126,7 @@ define(function(require) {
 			"vcl-data": "vcl/data"
 		},
 		
-		db: new PouchDB("cavalion-blocks"),
+		//db: new PouchDB("cavalion-blocks"),
 		
         parseUri: function (uri) {
             var r = {};
