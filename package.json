@@ -1,0 +1,19 @@
+{
+  "name": "cavalion-blocks",
+  "version": "0.8.1",
+  "description": "`blocks-dot-js` `[].js`",
+  "main": "README.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/relluf/cavalion-blocks.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/relluf/cavalion-blocks/issues"
+  },
+  "homepage": "https://github.com/relluf/cavalion-blocks#readme"
+}

@@ -177,6 +177,7 @@ var handlers = {
 			zoom: 2, maxZoom: 17
 		}, {});
 		
+		// TODO layeradd, layerremove?
 		["zoomlevelschange", "resize", "unload", "viewreset", "load", "zoomstart", "movestart", "zoom", "move", "zoomend", "moveend"].forEach(function(name) {
 					map.on(name, function() { 
 						me.emit("map-" + name, arguments); 
