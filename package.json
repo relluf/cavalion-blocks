@@ -1,6 +1,6 @@
 {
   "name": "cavalion-blocks",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "description": "`blocks-dot-js` `[].js`",
   "main": "README.js",
   "scripts": {
