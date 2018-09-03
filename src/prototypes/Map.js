@@ -155,7 +155,6 @@ var handlers = {
 				// 	}
 				// }
 	        });
-			window.cluster = cluster;
 	        cluster.addTo(map);
 
 	// var markers = [];
@@ -174,6 +173,7 @@ var handlers = {
 			};
 			
 			me.vars("map", map);
+			me.vars("cluster", cluster);
 			me.emit("map-ready", []);
 			
 	},
