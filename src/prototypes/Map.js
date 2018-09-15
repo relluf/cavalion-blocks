@@ -72,55 +72,7 @@ var KEY_RIGHT = Keyboard.getKeyCode("KEY_RIGHT");
 var styles = {
 	"border-top": "1px solid silver",
 	".map": "top:0;left:0;bottom:0;right:0;position:absolute;",
-	overflow: "hidden",
-	"#map-container": {
-		// ">div.map": "left:0;top:0;right:0;bottom:0;position:absolute;",
-		// ".leaflet-marker-icon.leaflet-marker-draggable": {
-		//     "transition": "margin-top 0.1s"
-		// },
-		// ".leaflet-popup-content": {
-  //          "font-family": 
-  //              "'Open Sans', 'Segoe UI', 'Droid Sans', Tahoma, Arial, sans-serif"
-		// },
-		// ".awesome-marker": {
-	 //       ".marker-code": {
-	 //           "background-color": "rgb(54,165,215)",
-	 //           "margin-top": "2px",
-	 //           "font-size": "7pt",
-	 //           "font-family": "'Helvetica Neue', Arial, Helvetica, sans-serif"
-	 //       }
-		// },
-		// "div.title": {
-		//     "min-width": "200px",
-		//     "border-bottom": "1px solid #ddd",
-		//     "padding-bottom": "6px",
-		//     "margin-bottom": "8px",
-		//     ".fa": {
-		//         "font-size": "larger"
-		//     },
-		//     "span": {
-		//         "float": "right"
-		//     }
-		// },
-		// "div.links": {
-		//     "margin-top": "8px",
-		//     "padding-top": "6px",
-		//     "border-top": "1px solid #ddd",
-	 //       "color": "#4697ce",
-		//     "a": {
-		//         "text-decoration": "underline",
-		//         "cursor": "pointer",
-		//         "margin-right": "6px",
-		//         "&:active": {
-		//             color: "red"
-		//         }
-		//     },
-		//     ".coords": {
-		//         "float": "right",
-		//         "color": "silver"
-		//     }
-		// }
-	}
+	overflow: "hidden"
 };
 var handlers = {
 	"loaded": function() {
@@ -203,7 +155,6 @@ var handlers = {
 				// 	}
 				// }
 	        });
-			window.cluster = cluster;
 	        cluster.addTo(map);
 
 	// var markers = [];
@@ -222,6 +173,7 @@ var handlers = {
 			};
 			
 			me.vars("map", map);
+			me.vars("cluster", cluster);
 			me.emit("map-ready", []);
 			
 	},
