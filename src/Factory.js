@@ -121,7 +121,7 @@ define(function(require) {
     				/*- Parse require section */
                     var i = source.indexOf("\";");
                     if(i !== -1) {
-                        deps = source.substring(1, i).replace(/\s/g, "");
+                        var deps = source.substring(1, i).replace(/\s/g, "");
                         deps = deps.split(",");
                         
                         var path = js.normalize(this._uri, ".");
