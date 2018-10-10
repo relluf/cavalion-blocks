@@ -4,6 +4,6 @@
 	source: "array"
 }, [
 	["vcl-data:Array", "array", {
-		array: window.allDocs
+		array: []
 	}]	
 ]]

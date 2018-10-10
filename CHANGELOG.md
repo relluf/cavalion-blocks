@@ -1,3 +1,6 @@
+### 2018-09-15 - 0.8.4
+- Fixing some issues for usage in v7-maps
+
 ### 2018-08-28 - 0.8.3
 - Fixing some issues for usage in v7-maps
 
