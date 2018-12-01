@@ -123,7 +123,8 @@ define(function(require) {
 		DEFAULT_NAMESPACES: {
 			"vcl": "vcl",
 			"vcl-ui": "vcl/ui",
-			"vcl-data": "vcl/data"
+			"vcl-data": "vcl/data",
+			"vcl-veldoffice": "vcl/veldoffice"
 		},
 		
 		//db: new PouchDB("cavalion-blocks"),
