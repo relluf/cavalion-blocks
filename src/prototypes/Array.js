@@ -7,6 +7,6 @@ var scorecard = "123456".split("")
 
 "Three Of a Kind,Carre,Full House,Small Street,Large Street,Yathzee,Chance".split(",").map(_ => ({ label: _, score: 0 }));
 */
-["vcl-data:Array", { array: array }, [
+["vcl-data:Array", { }, [ //array: array }, [
 
 ]];

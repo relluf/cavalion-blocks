@@ -113,7 +113,8 @@ define(function(require) {
 				return "text!" + uri;
 			},
 			load: function(source, success, failure) {
-                if(source && source.charAt && source.charAt(0) === "\"" && source.indexOf("\"use strict\";") !== 0) {
+                if(source && source.charAt && source.charAt(0) === "\"" && 
+                	source.indexOf("\"use strict\";") !== 0) {
                 	if(source.indexOf("\"use ") === 0) {
                 		// TODO this should be the default
                 		source = "\"" + source.substring(5);
@@ -122,7 +123,9 @@ define(function(require) {
                     var i = source.indexOf("\";");
                     if(i !== -1) {
                         var deps = source.substring(1, i).replace(/\s/g, "");
-                        deps = deps.split(",");
+                        deps = deps.split(",").filter(function(dep) {
+                        	return dep !== "strict" && dep !== "nostrict";
+                        });
                         
                         var path = js.normalize(this._uri, ".");
                         deps = deps.map(function(dep) {

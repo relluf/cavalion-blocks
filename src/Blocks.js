@@ -124,6 +124,7 @@ define(function(require) {
 			"vcl": "vcl",
 			"vcl-ui": "vcl/ui",
 			"vcl-data": "vcl/data",
+			"vcl-entities": "vcl/entities",
 			"vcl-veldoffice": "vcl/veldoffice"
 		},
 		
