@@ -1,3 +1,9 @@
+### 2019-01-07 (1.8.8)
+- Pushing for server2
+
+### 2019-01-06
+- Developing Tree, Node
+
 ### 2018-09-15 - 0.8.4
 - Fixing some issues for usage in v7-maps
 
