@@ -358,18 +358,22 @@ define(function(require) {
 						component.setParentComponent(parent);
 						component.setName(node.name);
 						component.setUri(node.uri || me._uri);
+						me.apply(root, component, node, [], fixUps);
 					} else {
+						root.qsa("#" + node.name).map(function(component) {
+							me.apply(root, component, node, [], fixUps);
+						});
 						// First check the current scope (parent)
-						if((component = parent.getScope()[node.name]) === undefined) {
-							component = root.findComponent(node.name);
-						}
-						if(component === null) {
-							console.warn(String.format("Inherited component %s not found (%s)", node.name, me._uri));
-							return;
-						}
+						// if((component = parent.getScope()[node.name]) === undefined) {
+						// 	component = root.findComponent(node.name);
+						// }
+						// if(component === null) {
+						// 	console.warn(String.format("Inherited component %s not found (%s)", node.name, me._uri));
+						// 	return;
+						// }
+						// console.log(node.name);
 					}
 
-					me.apply(root, component, node, [], fixUps);
 				});
 			},
 			factoryApplied: function(factory, root, component, node, applied, fixUps) {
