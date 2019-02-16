@@ -65,7 +65,8 @@ define(function(require) {
 			walk(node, f);
 		});
 	}
-	function getClassName(className) {
+	function getClassName(className, namespaces) {
+		var root_ns = namespaces.def || "";
 		if(className.indexOf(":") !== -1) {
 			className = className.split(":");
 			if(className[0].indexOf("<") !== -1) {
@@ -75,10 +76,11 @@ define(function(require) {
 				throw new Error(String.format("Unknown namespace %s (%s)",
 						className[0], js.keys(namespaces)));
 			}
-			className = String.format("%s/%s",
-					namespaces[className[0]], className[1]);
+			return String.format("%s/%s", namespaces[className[0]], className[1]);
+		} else if(className.charAt(0) === '/' || root_ns === "") {
+			return className;
 		}
-		return className;
+		return root_ns + "/" + className;
 	}
 	function getFactoryUri(name) {
 		return String.format("blocks/Factory!%s", name);
@@ -156,9 +158,13 @@ define(function(require) {
 
 				var me = this;
 				var require = me._parentRequire;
+				// var namespaces = js.mixIn(Blocks.DEFAULT_NAMESPACES);
 
 				/*- Parse the source into a JS structure */
 				var tree = parse(source, me._uri, js.normalize);
+				
+				
+				
 				/*- Make sure there is always something to require */
 				tree.factories.push("module");
 				tree.classes.push("module");
@@ -172,15 +178,16 @@ define(function(require) {
 				}
 
 				/*- namespace support */
-				var ns = tree.root.properties['@namespaces'];
+				var ns = tree.root.properties['@namespaces'] || (function() {
+					var r = tree.root.properties._ns; 
+					delete tree.root.properties._ns; 
+					return r;
+				}());
 				if(typeof ns === "string") {
 					ns = js.str2obj(ns);
 				}
-				if(ns !== undefined) {
-					js.mixIn(namespaces, tree.root.properties['@namespaces']);
-				}
 				tree.classes.forEach(function(className, index) {
-					tree.classes[index] = getClassName(className);
+					tree.classes[index] = getClassName(className, namespaces);
 				});
 
 				me._root = tree.root;
@@ -205,7 +212,7 @@ define(function(require) {
 						
 						walk(tree.root, function(node) {
 							if(typeof node.className === "string") {
-								node.ctor = require(getClassName(node.className));
+								node.ctor = require(getClassName(node.className, namespaces));
 							} else if(node.inherits instanceof Array) {
 								node.factories = [];
 								for(var i = 0; i < node.inherits.length; ++i) {
@@ -579,7 +586,7 @@ define(function(require) {
 			},
 			require: function(name, callback, failback) {
 				var ocallback = callback;
-				if(ocallback && typeof name === "string") {
+				if(callback && typeof name === "string") {
 					callback = function() {
 						//console.log("200 " + name);
 						return ocallback.apply(this, arguments);
