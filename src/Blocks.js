@@ -345,12 +345,12 @@ define(function(require) {
         instantiate: function(source, uri, sourceUri) {
         	Factory = Factory || require("blocks" + "/Factory");
         	
-        	var factory = new Factory(require, uri || "<inline>", sourceUri, false);
+        	var factory = new Factory(require, uri || "", sourceUri, false);
         	var p = new Promise(function(resolve, reject) {
         		factory.load(source, function() {
         			//resolve.apply(this, arguments);
         			try {
-        				resolve(factory.newInstance());
+        				resolve(factory.newInstance(/* owner, uri, options */));
         			} catch(e) {
         				reject(e);
         			}

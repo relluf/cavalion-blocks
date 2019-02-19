@@ -95,6 +95,7 @@ define(function(require) {
 			_setIsRoot: true,
 
 			constructor: function(parentRequire, uri, sourceUri, setIsRoot) {
+console.log("new Factory(): " + uri + " " + sourceUri);
 				this._parentRequire = parentRequire;
 				this._uri = uri;
 				sourceUri && (this._sourceUri = sourceUri);
@@ -240,6 +241,7 @@ define(function(require) {
 				}, failure);
 			},
 			newInstance: function(owner, uri, options) {
+console.log(String.format("Factory.newInstance(%n, %s, %s)", owner, uri, options), arguments);
 			/*- Instantiates the component based upon the structure parsed */
                 var component;
                 
@@ -289,7 +291,9 @@ define(function(require) {
 					fixUps.forEach(function(ref, i) {
 						var v;
 						if(ref.property.isReference()) {
-							if(ref.value && (ref.value.charAt(0) === "#")) {
+							if(ref.value instanceof Component) {
+								v = ref.value;
+							} else if(ref.value && (ref.value.charAt(0) === "#")) {
 								v = component.qs(ref.value);
 							} else {
 								v = (ref.value && ref.component.scope()[ref.value]);
