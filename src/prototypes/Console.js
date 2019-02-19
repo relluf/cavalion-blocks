@@ -1,3 +1,3 @@
-"use strict";
+"use js";
 
-["vcl-ui:Console", {}, []];
+["vcl-ui:Console", {}];

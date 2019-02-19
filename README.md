@@ -9,7 +9,7 @@
 This project is born out of the need of:
 
 * to persist the structure (routes, models, translations, ...) of the app as meta data for the app itself
-* to reboot/refresh cavalion-vcl, remove dead wood (or at least hide it to evolve with a clean slate)
+* to reboot/refresh a context, without worrying about details in (or _at the level of_) cavalion-vcl, well, at least hide or abstract them away in a new API
 * focus soley on the native-JS like way of doing this
 	* Object.create, real properties -and all-
 	* await, promise, etc.
@@ -128,5 +128,6 @@ inherits := inherits | [base, mixin, mixin]
 
 
 BLOCKS loaded should pass-on inherited loaded
+
 ----
 

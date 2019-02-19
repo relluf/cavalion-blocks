@@ -1,15 +1,15 @@
-### 2019-02-18 - 1.8.9
+### 2019-02-18 - 0.9.1
 - Made improvements in order to instantiate from console command line
 
 ### 2019-02-11
 - Introducing Console
 - The default namespace != root namespace (/List != List)
 
-### 2019-01-21
+### 2019-01-21 - 0.8.9
 - How about a Framework7 abstraction in Blocks?
 - Introducing @namespaces support in source file
 
-### 2019-01-07 (1.8.8)
+### 2019-01-07 - 0.8.8
 - Pushing for server2
 
 ### 2019-01-06
