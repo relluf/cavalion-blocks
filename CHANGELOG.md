@@ -1,8 +1,22 @@
+### 2019-02-18 - 1.8.9
+- Made improvements in order to instantiate from console command line
+
+### 2019-02-11
+- Introducing Console
+- The default namespace != root namespace (/List != List)
+
+### 2019-01-21
+- How about a Framework7 abstraction in Blocks?
+- Introducing @namespaces support in source file
+
 ### 2019-01-07 (1.8.8)
 - Pushing for server2
 
 ### 2019-01-06
 - Developing Tree, Node
+
+### 2018-12 - 0.8.5
+- Fixing some issues for usage in JavaScript build of cavalion-code
 
 ### 2018-09-15 - 0.8.4
 - Fixing some issues for usage in v7-maps
