@@ -11,6 +11,9 @@
 - Introducing Console
 - The default namespace != root namespace (/List != List)
 
+### 2019-01-25
+- Applying properties to multiple components _(does this lead to 'programming scopes'?)_"
+
 ### 2019-01-21 - 0.8.9
 - How about a Framework7 abstraction in Blocks?
 - Introducing @namespaces support in source file
