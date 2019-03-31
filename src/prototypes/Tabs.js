@@ -1,8 +1,8 @@
-"use Data, vcl/ui/Tab";
-"use strict";
+// "use Data, vcl/ui/Tab";
+// "use strict";
 
-var Data = require("Data");
-var Tab = require("vcl/ui/Tab");
+// var Data = require("Data");
+// var Tab = require("vcl/ui/Tab");
 
 var handlers = {
 	nLoad_: function() {
@@ -38,6 +38,6 @@ var bindings = {
 	}
 };
 
-["vcl-ui:Tabs", { handlers: handlers, bindings: bindings }];
+["vcl-ui:Tabs", { handlers: handlers/*, bindings: bindings */}];
 
 /*- wat je dus doet is een storage/customize-point introduceren */
