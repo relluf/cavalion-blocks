@@ -90,8 +90,8 @@
 
 		
 		
-	/*- this/local  --- I ---  global/universe 
-		inner  -------- I -------------  outer
+	/*- this/local  --- I ---  global/that 
+		inner  -------- I ---------  outer
 	
 		So (local) versus (global), but wtf is "I" doing there in the middle?
 		

@@ -1,3 +1,9 @@
+### 2019-03-31 - 0.9.3
+- Advancing Tab<>
+
+### 2019-03-07 - 0.9.2
+- Fixed as bug in `Tab<>` (override require'd)
+
 ### 2019-02-18 - 0.9.1
 - Made improvements in order to instantiate from console command line
 
