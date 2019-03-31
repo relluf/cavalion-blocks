@@ -127,6 +127,7 @@ define(function(require) {
 			"vcl-entities": "vcl/entities",
 			"vcl-veldoffice": "vcl/veldoffice"
 		},
+		DEFAULT_OWNER: null,
 		
 		//db: new PouchDB("cavalion-blocks"),
 		
@@ -342,15 +343,28 @@ define(function(require) {
             return String.format("[[\"" + uris.join("\", \"") + "\"]];");
         },
         
-        instantiate: function(source, uri, sourceUri) {
+        instantiate: function(source, options) {
+console.log("!!! blocks/Blocks.instantiate", arguments);        	
         	Factory = Factory || require("blocks" + "/Factory");
+        	options = options || {};
         	
-        	var factory = new Factory(require, uri || "", sourceUri, false);
+        	var owner = options.owner || Blocks.DEFAULT_OWNER, 
+        		uri = options.uri, 
+        		sourceUri = options.sourceUri;
+        	
+        	if(typeof source === "string") {
+        		uri = uri || source;
+        		source = [source];
+        		sourceUri = sourceUri || "source://" + uri;
+        		options.setIsRoot = true;
+        	}
+        	
+        	var factory = new Factory(require, uri || "", sourceUri, options.setIsRoot || false);
         	var p = new Promise(function(resolve, reject) {
         		factory.load(source, function() {
         			//resolve.apply(this, arguments);
         			try {
-        				resolve(factory.newInstance(/* owner, uri, options */));
+        				resolve(factory.newInstance(owner, uri, options));
         			} catch(e) {
         				reject(e);
         			}
