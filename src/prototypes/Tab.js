@@ -1,5 +1,4 @@
 "use locale, js, blocks/Blocks";
-"use strict";
 
 var locale = window.locale;
 var js = require("js");
@@ -8,6 +7,29 @@ var B = require("blocks/Blocks");
 var config = { text: locale("-text.default") }; //- defaults to name in "design mode"?
 
 ["vcl-ui:Tab", {
+	handlers: {
+		"selected": function() {
+			if(this._control === null) {
+				var me = this, cls = this.getSpecializer() || "Container";
+				this._control = B.instantiate([String.format("%s<%s>", cls, this._name)], {
+					uri: String.format("%s<%s>", cls.split(":").pop(), this._name),
+					owner: this, setIsRoot: true,
+					loaded: function(control) {
+						var parent = me._parent._parent;
+						// me._parent.vars(["vcl/ui/Tab:parent", true])
+						me.setControl(control);
+						control.setVisible(me.isSelected());
+						control.setParent(parent);
+						control.loaded();
+					}
+				});
+			}
+		},
+		"unselected": function() {
+			this.app().print("unselected", this);
+		}
+		
+	},
 	vars: { 
 		"Alt+Cmd": function(console, evt) {
 			var control = this._control;
@@ -15,20 +37,6 @@ var config = { text: locale("-text.default") }; //- defaults to name in "design 
 				
 			});
 		} 
-	},
-	onLoad: function() {
-		var me = this, cls = this.getSpecializer() || "Container";
-		B.instantiate([String.format("%s<%s>", cls, this._name)], {
-			uri: String.format("%s<%s>", cls.split(":").pop(), this._name),
-			owner: this, setIsRoot: true,
-			loaded: function(control) {
-				var parent = me._parent._parent;
-				// me._parent.vars(["vcl/ui/Tab:parent", true])
-				me.setControl(control);
-				control.setVisible(me.isSelected());
-				control.setParent(parent);
-			}
-		});
 	}
 }];
 
