@@ -1,3 +1,7 @@
+### 2019-04-12 - 0.9.4
+- Advancing Tab<> - lazy loading upon select
+- Blocks.fetch - abstraction towards first source file (before Blocks.getImplicitSourceByUri)
+
 ### 2019-03-31 - 0.9.3
 - Advancing Tab<>
 
