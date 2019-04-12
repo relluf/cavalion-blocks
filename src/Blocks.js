@@ -344,7 +344,6 @@ define(function(require) {
         },
         
         instantiate: function(source, options) {
-console.log("!!! blocks/Blocks.instantiate", arguments);        	
         	Factory = Factory || require("blocks" + "/Factory");
         	options = options || {};
         	

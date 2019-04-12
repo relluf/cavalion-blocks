@@ -1,5 +1,5 @@
 define(function(require) {
-"use strict";
+// "use strict";
 
 	/*-	The letters refer to specific cases in Blocks.implicitBasesFor
 
@@ -55,7 +55,7 @@ define(function(require) {
 	var VclFactory = require("vcl/Factory"); 
 	var js = require("js");
 	var PropertyValue = parse.PropertyValue;
-
+	
 	// var namespaces = js.mixIn(Blocks.DEFAULT_NAMESPACES);
 	var namespaces = Blocks.DEFAULT_NAMESPACES;
 
@@ -518,22 +518,31 @@ define(function(require) {
 				/** @overrides http://requirejs.org/docs/plugins.html#apiload */
 				var sourceUri = Factory.makeTextUri(name);
 
-				function f(source) {
+				function instantiate(source) {
 					var factory = new Factory(parentRequire, name, sourceUri);
 					factory.load(source, function() {
 						load(factory);
 					});
 				}
 
-				parentRequire([sourceUri], function(source) {
-					f(source);
-				}, function(err) {
-					// Source not found, assume it...
-					var source = Blocks.implicitSourceFor(name);
-					Factory.implicit_sources[sourceUri] = source;
-					f(source);
+				function fallback() {				
+					parentRequire([sourceUri], instantiate, function () {
+						// Source not found, assume it...
+						var source = Blocks.implicitSourceFor(name);
+						Factory.implicit_sources[sourceUri] = source;
+						instantiate(source);
+					});
+				}
+
+				this.fetch(name).then(instantiate).catch(fallback)
+			},
+			fetch: function(name) {
+				// returns Promise; overrides which resource should be considered first
+				return new Promise(function(resolve, reject) {
+					reject();	
 				});
 			},
+			
 			resolveUri: function(uri) {
 				if(uri.substring(uri.length - 2, uri.length) === "<>") {
 /**/				console.warn(uri);
