@@ -1,9 +1,9 @@
 ### 2019-04-12 - 0.9.4
-- Advancing Tab<> - lazy loading upon select
+- Advancing `Tab<>` - lazy loading upon select
 - Blocks.fetch - abstraction towards first source file (before Blocks.getImplicitSourceByUri)
 
 ### 2019-03-31 - 0.9.3
-- Advancing Tab<>
+- Advancing `Tab<>`
 
 ### 2019-03-07 - 0.9.2
 - Fixed as bug in `Tab<>` (override require'd)

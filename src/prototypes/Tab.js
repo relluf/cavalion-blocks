@@ -9,8 +9,8 @@ var config = { text: locale("-text.default") }; //- defaults to name in "design 
 ["vcl-ui:Tab", {
 	handlers: {
 		"selected": function() {
-			if(this._control === null) {
-				var me = this, cls = this.getSpecializer() || "Container";
+			var me = this, cls = this.getSpecializer();
+			if(this._control === null && cls) {
 				this._control = B.instantiate([String.format("%s<%s>", cls, this._name)], {
 					uri: String.format("%s<%s>", cls.split(":").pop(), this._name),
 					owner: this, setIsRoot: true,
