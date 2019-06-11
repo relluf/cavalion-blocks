@@ -1,3 +1,6 @@
+### 2019-06-11 - 0.9.5
+- In Tree nodes now inherit parent onNodesNeeded (if not specified)
+
 ### 2019-04-12 - 0.9.4
 - Advancing `Tab<>` - lazy loading upon select
 - Blocks.fetch - abstraction towards first source file (before Blocks.getImplicitSourceByUri)
