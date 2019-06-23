@@ -1,3 +1,6 @@
+### 2019-06-23 - 0.9.6
+- Cleaning up
+
 ### 2019-06-11 - 0.9.5
 - In Tree nodes now inherit parent onNodesNeeded (if not specified)
 

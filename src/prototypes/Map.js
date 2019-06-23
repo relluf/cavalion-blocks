@@ -136,26 +136,26 @@ var handlers = {
 					});
 				});
 				
-			var cluster = L.markerClusterGroup({
-				disableClusteringAtZoom: 13,
-				// chunkedLoading: true,
-				// chunkDelay: 100,
-				// chunkProgress: function(processed, total, elapsed, layersArray) {
-				// 	var progress = $$('.markers-progress', container)[0];
-				// 	var progressBar = $$('.markers-progress-bar', container)[0];
-					
-				// 	if (elapsed > 100) {
-				// 		// if it takes more than a second to load, display the progress bar:
-				// 		progress.style.display = 'block';
-				// 		progressBar.style.width = Math.round(processed/total*100) + '%';
-				// 	}
-				// 	if (processed === total) {
-				// 		// all markers processed - hide the progress bar:
-				// 		progress.style.display = '';
-				// 	}
-				// }
-	        });
-	        cluster.addTo(map);
+		var cluster = L.markerClusterGroup({
+			disableClusteringAtZoom: 13,
+			// chunkedLoading: true,
+			// chunkDelay: 100,
+			// chunkProgress: function(processed, total, elapsed, layersArray) {
+			// 	var progress = $$('.markers-progress', container)[0];
+			// 	var progressBar = $$('.markers-progress-bar', container)[0];
+				
+			// 	if (elapsed > 100) {
+			// 		// if it takes more than a second to load, display the progress bar:
+			// 		progress.style.display = 'block';
+			// 		progressBar.style.width = Math.round(processed/total*100) + '%';
+			// 	}
+			// 	if (processed === total) {
+			// 		// all markers processed - hide the progress bar:
+			// 		progress.style.display = '';
+			// 	}
+			// }
+        });
+        cluster.addTo(map);
 
 	// var markers = [];
 	// function addToCluster(marker) {
@@ -167,15 +167,14 @@ var handlers = {
 	// 	}, 100);
 	// }
 	        
-			var addLayer = map.addLayer;
-			map.addLayer = function(layer) {
-				return addLayer.apply(this, arguments);
-			};
-			
-			me.vars("map", map);
-			me.vars("cluster", cluster);
-			me.emit("map-ready", []);
-			
+		var addLayer = map.addLayer;
+		map.addLayer = function(layer) {
+			return addLayer.apply(this, arguments);
+		};
+		
+		me.vars("map", map);
+		me.vars("cluster", cluster);
+		me.emit("map-ready", []);
 	},
 	onLoad: function() {
 		var me = this;

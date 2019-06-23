@@ -26,7 +26,7 @@ var config = { text: locale("-text.default") }; //- defaults to name in "design 
 			}
 		},
 		"unselected": function() {
-			this.app().print("unselected", this);
+			// this.app().print("unselected", this);
 		}
 		
 	},
