@@ -1,3 +1,6 @@
+### 2019-07-03 - 0.9.7
+- Adding loading class to Bar
+
 ### 2019-06-23 - 0.9.6
 - Cleaning up
 
