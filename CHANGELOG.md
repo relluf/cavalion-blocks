@@ -1,3 +1,6 @@
+### 2019-08-01 - 0.9.8
+- Making adjustment for V7 (r.js -o build.json)
+
 ### 2019-07-03 - 0.9.7
 - Adding loading class to Bar
 

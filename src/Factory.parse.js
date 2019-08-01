@@ -37,9 +37,9 @@ define(function(require) {
 		return r;
 	}
 	function impl(source, uri, normalize) {
-
-		var Component = require("vcl/Component");
-		var Factory = require("blocks/Factory");
+		var require_ = require;
+		var Component = require_("vcl/Component");
+		var Factory = require_("blocks/Factory");
 
 		var tree = {
 			root: [],

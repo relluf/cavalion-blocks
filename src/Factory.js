@@ -508,6 +508,11 @@ define(function(require) {
 			implicit_sources: {},
 
 			load: function(name, parentRequire, load, config) {
+				if(typeof window === "undefined") {
+					console.log("blocks/Factory!! " + name);
+					return onLoad(name);
+				}
+				
 				if(name.indexOf("vcl-comps:") === 0) {
 					// #1453 (duck-typing VclFactory vs BlocksFactory)
 					return VclFactory.load(name.substring(10), parentRequire, function() {
