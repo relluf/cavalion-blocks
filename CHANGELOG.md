@@ -1,3 +1,8 @@
+### 2019-08-21 - 0.9.9
+- Enhancements in order to use require() with relative paths, kindof:
+
+>> ![](https://i.snipboard.io/pCjgSD.jpg?2x)
+
 ### 2019-08-01 - 0.9.8
 - Making adjustment for V7 (r.js -o build.json)
 
