@@ -1,7 +1,8 @@
-define(function(require) {
+define(["js/Deferred", "blocks/Blocks"], function(Deferred, Blocks) {
 
-	var Deferred = require("js/Deferred");
-	var Blocks = require("blocks/Blocks");
+	var require_ = require;
+	// var Deferred = require("js/Deferred");
+	// var Blocks = require("blocks/Blocks");
 	
 	function PropertyValue(uri) {
 		this.uri = uri;
@@ -17,7 +18,7 @@ define(function(require) {
 		return r;
 	};
 
-	function parse() {
+	function parse(source, require) {
 	    function mapArrFn(arr, fn) {
 	        return arr.map(function(item) {
 	            if(item instanceof Array) {
@@ -36,8 +37,7 @@ define(function(require) {
 		}
 		return r;
 	}
-	function impl(source, uri, normalize) {
-		var require_ = require;
+	function impl(source, uri, normalize, require) {
 		var Component = require_("vcl/Component");
 		var Factory = require_("blocks/Factory");
 
@@ -47,7 +47,7 @@ define(function(require) {
 			factories: [],
 			uri: Blocks.parseUri(uri)
 		};
-
+		
 		function walk(node) {
 			/**
 			 * Dependencies are two-fold:
@@ -107,7 +107,8 @@ define(function(require) {
 			    uri.indexOf(Blocks.PREFIX_PROTOTYPES) === 0 ? "blocks-prototypes" : "cavalion-blocks",
 			    devtoolsFriendly(uri));
 		}
-		tree.root = parse(source);
+
+		tree.root = parse(source, require || require_);
 		tree.root && adjust(tree.root);
 		return tree;
 	}

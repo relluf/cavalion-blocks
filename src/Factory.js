@@ -162,10 +162,8 @@ define(function(require) {
 				// var namespaces = js.mixIn(Blocks.DEFAULT_NAMESPACES);
 
 				/*- Parse the source into a JS structure */
-				var tree = parse(source, me._uri, js.normalize);
-				
-				
-				
+				var tree = parse(source, me._uri, js.normalize, require);
+
 				/*- Make sure there is always something to require */
 				tree.factories.push("module");
 				tree.classes.push("module");
