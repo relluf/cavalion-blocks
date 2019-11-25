@@ -358,7 +358,7 @@ define(function(require) {
         		options.setIsRoot = true;
         	}
         	
-        	var factory = new Factory(require, uri || "", sourceUri, options.setIsRoot || false);
+        	var factory = new Factory(require, uri || source[0] || "", sourceUri, options.setIsRoot || false);
         	var p = new Promise(function(resolve, reject) {
         		factory.load(source, function() {
         			//resolve.apply(this, arguments);
