@@ -1,3 +1,10 @@
+### 2019-11-29 - 0.9.11
+- Introducing new classes
+
+### 2019-11-25 - 0.9.10
+- Fixing auto-uri-ing blocks created via B.instantiate()
+- Local overrides?
+
 ### 2019-08-21 - 0.9.9
 - Enhancements in order to use require() with relative paths, kindof:
 
