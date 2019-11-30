@@ -361,9 +361,10 @@ define(function(require) {
         	var factory = new Factory(require, uri || source[0] || "", sourceUri, options.setIsRoot || false);
         	var p = new Promise(function(resolve, reject) {
         		factory.load(source, function() {
-        			//resolve.apply(this, arguments);
         			try {
-        				resolve(factory.newInstance(owner, uri, options));
+        				var root = factory.newInstance(owner, uri, options);
+        				if(typeof root.update === "function") root.update();
+        				resolve(root);
         			} catch(e) {
         				reject(e);
         			}
