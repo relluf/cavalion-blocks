@@ -1,3 +1,9 @@
+### 2019-12-02 - 0.9.12
+- (FINALLY) Implemented relative resources via require (so cool)
+
+> ![image](https://user-images.githubusercontent.com/686773/70025078-95f39100-1561-11ea-9368-09daa0442916.png?2x)
+
+
 ### 2019-11-29 - 0.9.11
 - Introducing new classes
 

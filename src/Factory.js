@@ -85,6 +85,16 @@ define(function(require) {
 	function getFactoryUri(name) {
 		return String.format("blocks/Factory!%s", name);
 	}
+	function normalize(uri, module) {
+		if(module.includes("!")) {
+			module = module.split("!");
+			module[1] = js.normalize(uri, module[1]);
+			module = module.join("!");
+		} else {
+			module = js.normalize(uri, module);
+		}
+		return module;
+	}
 
 	return (Factory = Factory(require, {
 		prototype: {
@@ -95,10 +105,28 @@ define(function(require) {
 			_setIsRoot: true,
 
 			constructor: function(parentRequire, uri, sourceUri, setIsRoot) {
-// console.log("new Factory(): " + uri + " " + sourceUri);
-				this._parentRequire = parentRequire;
+				var args = js.copy_args(arguments);
+
+/*- TODO clean up */				
+				function thisRequire(modules, success, error) {
+					if(modules instanceof Array) {
+						modules = modules.map(module => normalize(sourceUri.split("!").pop(), module));
+					} else {
+						modules = normalize(sourceUri.split("!").pop(), modules);
+					}
+// console.log(">>>", modules);
+					return parentRequire(modules, success, error);
+				}
+				
+				for(var k in parentRequire) {
+					thisRequire[k] = parentRequire[k];
+				}
+
+				this._parentRequire = thisRequire;
 				this._uri = uri;
+
 				sourceUri && (this._sourceUri = sourceUri);
+
 				arguments.length === 4 && (this._setIsRoot = setIsRoot);
 			},
 			toString: function() {
@@ -116,6 +144,7 @@ define(function(require) {
 				return "text!" + uri;
 			},
 			load: function(source, success, failure) {
+                var me = this, uri = this._sourceUri.split("!").pop();
                 if(source && source.charAt && source.charAt(0) === "\"" && 
                 	source.indexOf("\"use strict\";") !== 0) {
                 	if(source.indexOf("\"use ") === 0) {
@@ -128,15 +157,11 @@ define(function(require) {
                         var deps = source.substring(1, i).replace(/\s/g, "");
                         deps = deps.split(",").filter(function(dep) {
                         	return dep !== "strict" && dep !== "nostrict";
+                        }).map(function(dep) {
+                        	return normalize(uri, dep);
                         });
-                        
-                        var path = js.normalize(this._uri, ".");
-                        deps = deps.map(function(dep) {
-                        	return dep.indexOf("./") === 0 ? path + dep.substring(1) : dep;
-                        });
-                        
+
                         /*- require all dependecies */
-                        var me = this;
                         return this._parentRequire(deps, function() {
                             me.doLoad(source, success, failure);
                         }, failure);
