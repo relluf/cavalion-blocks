@@ -106,6 +106,8 @@ define(function(require) {
 
 			constructor: function(parentRequire, uri, sourceUri, setIsRoot) {
 				var args = js.copy_args(arguments);
+				
+				sourceUri = sourceUri || uri;
 
 /*- TODO clean up */				
 				function thisRequire(modules, success, error) {
@@ -144,7 +146,7 @@ define(function(require) {
 				return "text!" + uri;
 			},
 			load: function(source, success, failure) {
-                var me = this, uri = this._sourceUri.split("!").pop();
+                var me = this, uri = (this._sourceUri||this._uri).split("!").pop();
                 if(source && source.charAt && source.charAt(0) === "\"" && 
                 	source.indexOf("\"use strict\";") !== 0) {
                 	if(source.indexOf("\"use ") === 0) {
