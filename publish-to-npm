@@ -1,0 +1,4 @@
+./cp-to-dropbox
+cd ~/Dropbox/Docs/veldapps.com/dropbox@veldapps.com/cavalion-blocks
+vi package.json
+npm publish

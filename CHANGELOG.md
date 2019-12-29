@@ -1,3 +1,6 @@
+### 2019-12-02 - 0.9.13
+- Fixing some bugs related to requiring relatively addressed resources
+
 ### 2019-12-02 - 0.9.12
 - (FINALLY) Implemented relative resources via require (so cool)
 

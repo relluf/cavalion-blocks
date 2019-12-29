@@ -1,0 +1,9 @@
+for i in console ide veldapps
+do
+	#echo rm ~/Dropbox/Docs/veldapps.com/dropbox@veldapps.com/cavalion-blocks/$i
+	rm -Rf ~/Dropbox/Docs/veldapps.com/dropbox@veldapps.com/cavalion-blocks/$i
+	#echo cp src/cavalion-blocks/$i ~/Dropbox/Docs/veldapps.com/dropbox@veldapps.com/cavalion-blocks/$i
+	cp -RL src/cavalion-blocks/$i ~/Dropbox/Docs/veldapps.com/dropbox@veldapps.com/cavalion-blocks/$i
+done
+cp -RL src/prototypes ~/Dropbox/Docs/veldapps.com/dropbox@veldapps.com/cavalion-blocks/prototypes
+#cp -R src/cavalion-blocks/tools ~/Dropbox/Docs/veldapps.com/dropbox@veldapps.com/cavalion-blocks
