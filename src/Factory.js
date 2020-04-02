@@ -1,5 +1,4 @@
 define(function(require) {
-// "use strict";
 
 	/*-	The letters refer to specific cases in Blocks.implicitBasesFor
 
@@ -531,7 +530,6 @@ define(function(require) {
 		statics: {
 			
 			implicit_sources: {},
-
 			load: function(name, parentRequire, load, config) {
 				if(typeof window === "undefined") {
 					console.log("blocks/Factory!! " + name);
@@ -566,6 +564,7 @@ define(function(require) {
 
 				this.fetch(name).then(instantiate).catch(fallback)
 			},
+
 			fetch: function(name) {
 				// returns Promise; overrides which resource should be considered first
 				return new Promise(function(resolve, reject) {

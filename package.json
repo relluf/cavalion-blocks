@@ -15,5 +15,6 @@
   "bugs": {
     "url": "https://github.com/relluf/cavalion-blocks/issues"
   },
-  "homepage": "https://github.com/relluf/cavalion-blocks#readme"
+  "homepage": "https://github.com/relluf/cavalion-blocks#readme",
+  "dependencies": {}
 }
