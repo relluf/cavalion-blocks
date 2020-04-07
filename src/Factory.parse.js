@@ -30,7 +30,7 @@ define(["js/Deferred", "blocks/Blocks"], function(Deferred, Blocks) {
 	    
 	    var r = arguments[0];
 	    if(!(r instanceof Array)) {
-			r = eval(r);
+			r = eval(r); // require parameter is in 'scope'
 	    }
 		if(r instanceof Array) {
 		    r = Blocks.parse.apply(Blocks, r);

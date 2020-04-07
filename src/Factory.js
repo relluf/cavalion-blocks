@@ -105,7 +105,6 @@ define(function(require) {
 
 			constructor: function(parentRequire, uri, sourceUri, setIsRoot) {
 				var args = js.copy_args(arguments);
-				
 				sourceUri = sourceUri || uri;
 
 /*- TODO clean up */				
