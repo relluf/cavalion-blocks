@@ -379,5 +379,7 @@ define(function(require) {
 	    parse: parseBlock
 	};
 	
+	Blocks.i = Blocks.instantiate;
+	
 	return Blocks;
 });
