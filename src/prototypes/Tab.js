@@ -11,12 +11,13 @@ var config = { text: locale("-text.default") }; //- defaults to name in "design 
 		"selected": function() {
 			var me = this, cls = this.getSpecializer();
 			if(this._control === null && cls) {
-				this._control = B.instantiate([String.format("%s<%s>", cls, this._name)], {
-					uri: String.format("%s<%s>", cls.split(":").pop(), this._name),
+				var uri = this.vars("uri");
+				this._control = B.instantiate([uri || String.format("%s<%s>", cls, this._name)], {
+					uri: uri || String.format("%s<%s>", cls.split(":").pop(), this._name),
 					owner: this, setIsRoot: true,
 					loaded: function(control) {
-						var parent = me._parent._parent;
-						// me._parent.vars(["vcl/ui/Tab:parent", true])
+						var parent = me._parent.vars("parent") || me._parent._parent;
+						
 						me.setControl(control);
 						control.setVisible(me.isSelected());
 						control.setParent(parent);
