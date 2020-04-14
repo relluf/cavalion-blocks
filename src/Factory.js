@@ -606,8 +606,11 @@ define(function(require) {
 			},
 			makeTextUri: function(uri, suffix) {
 				uri = "text!" + this.resolveUri(uri);
-				suffix = arguments.length === 2 ? suffix : ".js";
-				return !uri.endsWith(suffix) ? uri + suffix : uri;
+				if(!uri.endsWith(".blocks")) {
+					suffix = arguments.length === 2 ? suffix : ".js";
+					return !uri.endsWith(suffix) ? uri + suffix : uri;
+				}
+				return uri;
 			},
 			unreq: function(name) {
 			    var factory;
