@@ -1,3 +1,12 @@
+### 2020-04-14 - 0.9.15
+- Introducing B.i (aka blocks.i and/or Blocks.i) => short for instantiate
+- prototypes/Tab: Introducing vars.parent
+	- should the a (config)parameter?
+	- properties, vars, (props), (params), parameters
+
+### 2020-04-07 - 0.9.14
+- Some cosmetic changes
+
 ### 2019-12-02 - 0.9.13
 - Fixing some bugs related to requiring relatively addressed resources
 

@@ -561,7 +561,7 @@ define(function(require) {
 					});
 				}
 
-				this.fetch(name).then(instantiate).catch(fallback)
+				this.fetch(name).then(instantiate).catch(fallback);
 			},
 
 			fetch: function(name) {
