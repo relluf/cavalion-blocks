@@ -1,0 +1,6 @@
+"use blocks";
+
+["vcl:Component", {
+
+
+}];

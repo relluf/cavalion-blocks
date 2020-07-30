@@ -10,8 +10,8 @@ var config = { text: locale("-text.default") }; //- defaults to name in "design 
 	handlers: {
 		"selected": function() {
 			var me = this, cls = this.getSpecializer();
-			if(this._control === null && cls) {
-				var uri = this.vars("uri");
+			var uri = this.vars("uri");
+			if(this._control === null && (cls || uri)) {
 				this._control = B.instantiate([uri || String.format("%s<%s>", cls, this._name)], {
 					uri: uri || String.format("%s<%s>", cls.split(":").pop(), this._name),
 					owner: this, setIsRoot: true,
