@@ -1,3 +1,11 @@
+### 2020-07-30 - 0.9.16
+- Updating prototypes
+	- Ace
+	- Checkbox
+	- Entity
+	- Map
+	- Tab
+
 ### 2020-04-14 - 0.9.15
 - Introducing B.i (aka blocks.i and/or Blocks.i) => short for instantiate
 - prototypes/Tab: Introducing vars.parent
