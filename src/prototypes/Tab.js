@@ -1,5 +1,12 @@
 "use locale, js, blocks/Blocks";
 
+/*- 
+	
+	vars("uri") - specifies specific uri, if not present:
+		this.getSpecializer(); + this._name
+
+*/
+
 var locale = window.locale;
 var js = require("js");
 var B = require("blocks/Blocks");
@@ -10,10 +17,18 @@ var config = { text: locale("-text.default") }; //- defaults to name in "design 
 	handlers: {
 		"selected": function() {
 			var me = this, cls = this.getSpecializer();
-			var uri = this.vars("uri");
+			var uri = this.vars("uri"), specializer;
+			
 			if(this._control === null && (cls || uri)) {
-				this._control = B.instantiate([uri || String.format("%s<%s>", cls, this._name)], {
-					uri: uri || String.format("%s<%s>", cls.split(":").pop(), this._name),
+				if(cls) cls = cls.split("!");
+				if(cls.length > 1) {
+					specializer = cls.pop();
+					cls = cls.join("!");
+				} else {
+					specializer = this._name;
+				}
+				this._control = B.instantiate([uri || String.format("%s<%s>", cls, specializer)], {
+					uri: uri || String.format("%s<%s>", cls.split(":").pop(), specializer),
 					owner: this, setIsRoot: true,
 					loaded: function(control) {
 						var parent = me._parent.vars("parent") || me._parent._parent;
