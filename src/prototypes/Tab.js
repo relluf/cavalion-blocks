@@ -26,6 +26,7 @@ var config = { text: locale("-text.default") }; //- defaults to name in "design 
 					cls = cls.join("!");
 				} else {
 					specializer = this._name;
+					cls = cls.pop();
 				}
 				this._control = B.instantiate([uri || String.format("%s<%s>", cls, specializer)], {
 					uri: uri || String.format("%s<%s>", cls.split(":").pop(), specializer),
