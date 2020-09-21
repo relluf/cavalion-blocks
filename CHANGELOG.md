@@ -1,3 +1,6 @@
+### 2020-09-20 - 0.9.19
+- Bugfix for potential crash
+
 ### 2020-09-11 - 0.9.18
 - Adding prototypes/Radiobutton
 
