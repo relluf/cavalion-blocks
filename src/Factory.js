@@ -561,6 +561,7 @@ define(function(require) {
 					});
 				}
 
+				// TODO maybe reject() should not be the fallback but rather resolve(null)
 				this.fetch(name).then(instantiate).catch(fallback);
 			},
 
