@@ -20,7 +20,7 @@ var config = { text: locale("-text.default") }; //- defaults to name in "design 
 			var uri = this.vars("uri"), specializer;
 			
 			if(this._control === null && (cls || uri)) {
-				if(cls) cls = cls.split("!");
+				cls = cls ? cls.split("!") : [""];
 				if(cls.length > 1) {
 					specializer = cls.pop();
 					cls = cls.join("!");
