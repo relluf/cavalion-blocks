@@ -1,6 +1,6 @@
 "use js";
 
-["Container", { 
+["vcl-ui:Popup", { 
 	css: {
 		// "display": "none",
 		// "&.state-open": {
@@ -18,7 +18,5 @@
                 }
             }
         }
-	},
-	visible: false 
-
-}, []];
+	}
+}];
