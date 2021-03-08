@@ -283,7 +283,7 @@ define(function(require) {
 				} else {
                     uri = this._uri;
 				}
-
+				
 				// FIXME find a more elegant manner
 				var this_uri = this._uri;
 				this._uri = uri;
@@ -302,6 +302,11 @@ define(function(require) {
     					component.override(this._root.properties['@override']);
     					delete this._root.properties['@override'];
     				}
+
+				if(this._uri.startsWith("vcl-comps:")) {
+					this._uri = this._uri.substring("vcl-comps:".length);
+				}
+
 
                     component.beginLoading();
                     component.setUri(this._uri);
