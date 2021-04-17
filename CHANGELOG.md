@@ -1,3 +1,6 @@
+### 2021/03/07 - 0.9.22
+- blocks/Factory: Temporary fix/hack for `vcl-comps:`-usage
+
 ### 2021/02/07 - 0.9.21
 - Corrected base for `prototypes/Popup`
 
