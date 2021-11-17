@@ -1,3 +1,6 @@
 "use strict";
 
-["vcl-ui:Panel", { align: "client" }];
+["vcl-ui:Panel", { 
+	align: "client"
+	
+}];
