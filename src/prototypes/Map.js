@@ -32,8 +32,8 @@ function createMap(mapDomNode, mapOptions, options) {
     }
 
 	L.control.layers(options.layers || {
-		// openbasiskaart: Layers.openbasiskaart().addTo(map),
-		// luchtfoto2017: Layers.luchtfoto2017().addTo(map),
+		// penbasiskaart: Layers.openbasiskaart().addTo(map),
+		luchtfoto2017: Layers.luchtfoto2017().addTo(map),
 		// bgtlijngericht: Layers.bgtlijngericht().addTo(map),
 		// bgtpastel: Layers.bgtpastel().addTo(map)
 	});//.addTo(map);
