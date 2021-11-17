@@ -104,6 +104,11 @@ define(function(require) {
 			_setIsRoot: true,
 
 			constructor: function(parentRequire, uri, sourceUri, setIsRoot) {
+				if(uri.endsWith(":root")) {
+					uri = uri.substring(0, uri.length - ":root".length);
+					setIsRoot = true;
+				}
+
 				var args = js.copy_args(arguments);
 				sourceUri = sourceUri || uri;
 
@@ -303,9 +308,9 @@ define(function(require) {
     					delete this._root.properties['@override'];
     				}
 
-				if(this._uri.startsWith("vcl-comps:")) {
-					this._uri = this._uri.substring("vcl-comps:".length);
-				}
+					if(this._uri.startsWith("vcl-comps:")) {
+						this._uri = this._uri.substring("vcl-comps:".length);
+					}
 
 
                     component.beginLoading();
@@ -386,6 +391,7 @@ define(function(require) {
 					});
 				}
 				
+				
 				this.setProperties(component, node, fixUps);
 
 				var parent = component;
@@ -393,11 +399,20 @@ define(function(require) {
 					var component;
 					if(node.ctor !== undefined) {
 						component = new (node.ctor)();
+						
+						// // var uri = node.uri || me._uri;
+						// if(node.uri.endsWith(":root")) {
+						node.setIsRoot && component.setIsRoot(node.setIsRoot);
+						// 	node.uri = node.uri.substring(0, node.uri.length - ":root".length);
+						// }
+						
 						component.setOwner(root);
 						component.setParentComponent(parent);
 						component.setName(node.name);
 						component.setUri(node.uri || me._uri);
+
 						me.apply(root, component, node, [], fixUps);
+
 					} else {
 						root.qsa("#" + node.name).map(function(component) {
 							me.apply(root, component, node, [], fixUps);
@@ -460,7 +475,9 @@ define(function(require) {
 			setProperties: function(component, node, fixUps) {
 				component['@properties'] = js.extend(component['@properties'] || {}, node.properties);
 				//component['@properties']['@uri'] = this._uri;
-				component['@factory'] = this;
+				if(!component['@factory']) {
+					component['@factory'] = this;
+				}
 
 				var properties = component.defineProperties(), property;
 				for( var k in node.properties) {
