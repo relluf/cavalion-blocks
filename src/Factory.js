@@ -475,9 +475,9 @@ define(function(require) {
 			setProperties: function(component, node, fixUps) {
 				component['@properties'] = js.extend(component['@properties'] || {}, node.properties);
 				//component['@properties']['@uri'] = this._uri;
-				if(!component['@factory']) {
+				// if(!component['@factory']) {
 					component['@factory'] = this;
-				}
+				// }
 
 				var properties = component.defineProperties(), property;
 				for( var k in node.properties) {
