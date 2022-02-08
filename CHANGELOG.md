@@ -1,3 +1,13 @@
+### 2022/02/07 - 0.9.27
+- **blocks/Blocks**: getImplicitSourceFor(): emitting terminating semi-colon
+- **blocks/Factory**: Now keeping track of the `implicit_sources` in such a manner that they can be reproduced correctly (eg. by vcl-comps://make/Build)
+
+>> ![image](https://user-images.githubusercontent.com/686773/152897778-394043f0-b0b8-4afa-aa4e-4ebfe60fe466.png?2x)
+
+
+### 2022/01/23 - 0.9.26
+- Fix for `@factory` not being set correctly
+
 ### 2021/11/17 - 0.9.25
 - Adding support for `:root`
 
