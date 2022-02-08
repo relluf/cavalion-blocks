@@ -477,7 +477,8 @@ define(function(require) {
 				//component['@properties']['@uri'] = this._uri;
 				// if(!component['@factory']) {
 					component['@factory'] = this;
-				// }
+				// 581
+				
 
 				var properties = component.defineProperties(), property;
 				for( var k in node.properties) {
@@ -578,7 +579,15 @@ define(function(require) {
 					parentRequire([sourceUri], instantiate, function () {
 						// Source not found, assume it...
 						var source = Blocks.implicitSourceFor(name);
-						Factory.implicit_sources[sourceUri] = source;
+						var arr = Factory.implicit_sources[sourceUri];
+
+						if(Factory.implicit_sources[name]) debugger;
+
+						Factory.implicit_sources[name] = {
+							source: source, 
+							sourceUri: sourceUri
+						};
+						
 						instantiate(source);
 					});
 				}
