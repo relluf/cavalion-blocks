@@ -1,3 +1,6 @@
+### 2022/03/28 - 0.9.28
+- Refactoring [OpenLayers => [Map] => Map-leaflet]
+
 ### 2022/02/07 - 0.9.27
 - **blocks/Blocks**: getImplicitSourceFor(): emitting terminating semi-colon
 - **blocks/Factory**: Now keeping track of the `implicit_sources` in such a manner that they can be reproduced correctly (eg. by vcl-comps://make/Build)
