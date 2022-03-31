@@ -581,7 +581,7 @@ define(function(require) {
 						var source = Blocks.implicitSourceFor(name);
 						var arr = Factory.implicit_sources[sourceUri];
 
-						if(Factory.implicit_sources[name]) debugger;
+						if(Factory.implicit_sources[name]) { console.warn("debugme") };
 
 						Factory.implicit_sources[name] = {
 							source: source, 
