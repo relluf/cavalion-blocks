@@ -1,4 +1,9 @@
-### 2022/03/28 - 0.9.28
+### 2022/04/15 - 0.9.30
+
+- Updating styles
+
+### 2022/03/28 - 0.9.29
+
 - Refactoring [OpenLayers => [Map] => Map-leaflet]
 
 ### 2022/02/07 - 0.9.27
