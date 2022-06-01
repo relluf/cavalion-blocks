@@ -555,9 +555,9 @@ define(function(require) {
 			load: function(name, parentRequire, load, config) {
 				if(typeof window === "undefined") {
 					console.log("blocks/Factory!! " + name);
-					return onLoad(name);
+					return load(name);
 				}
-				
+
 				if(name.indexOf("vcl-comps:") === 0) {
 					// #1453 (duck-typing VclFactory vs BlocksFactory)
 					return VclFactory.load(name.substring(10), parentRequire, function() {
@@ -581,8 +581,6 @@ define(function(require) {
 						var source = Blocks.implicitSourceFor(name);
 						var arr = Factory.implicit_sources[sourceUri];
 
-						if(Factory.implicit_sources[name]) { console.warn("debugme") };
-
 						Factory.implicit_sources[name] = {
 							source: source, 
 							sourceUri: sourceUri
@@ -592,6 +590,10 @@ define(function(require) {
 					});
 				}
 
+				if(Factory.implicit_sources[name]) { 
+					return instantiate(Factory.implicit_sources[name].source);
+				}
+				
 				// TODO maybe reject() should not be the fallback but rather resolve(null)
 				this.fetch(name).then(instantiate).catch(fallback);
 			},
