@@ -1,3 +1,7 @@
+### 2022/06/23 - 0.9.33
+
+* Removes dead code
+
 ### 2022/04/17 - 0.9.32
 
 * Fixes 404s for implicitly defined sources ([Factory](src/:.js))
