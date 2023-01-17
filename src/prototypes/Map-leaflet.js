@@ -1,4 +1,4 @@
-"leaflet/Crs, leaflet/layers/28992, leaflet/plugins/markercluster, util/Browser, util/HtmlElement";
+"leaflet/Crs, leaflet/layers/28992, leaflet/plugins/markercluster, util/Browser, util/HtmlElement, veldoffice/util/Leaflet";
 // "use strict";
 
 var Layers = require("leaflet/layers/28992");
@@ -9,52 +9,10 @@ var Keyboard = require("util/Keyboard");
 var Browser = require("util/Browser");
 var HE = require("util/HtmlElement");
 
+var LeafletUtil = require("veldoffice/util/Leaflet");
+
 var js = window.js;
 var L = window.L;
-
-function createMap(mapDomNode, mapOptions, options) {
-	var touch = "ontouchstart" in window;
-	
-	mapOptions = js.mixIn({ zoomControl: false, attributionControl: false,
-		preferCanvas: !true }, mapOptions || {});
-    
-    if(mapOptions.crs === undefined) {
-    	// Assume RD by default (for Veldoffice anyways)
-    	mapOptions.crs = Crs.RD;
-    }
-	
-    var map = L.map(mapDomNode, mapOptions);
-    options = options || {};
-
-    if(Browser.ios !== true && Browser.android !== true) {
-		/*- TODO move to Map.page */
-		HE.addClass(mapDomNode, "desktop");
-    }
-
-	L.control.layers(options.layers || {
-		// penbasiskaart: Layers.openbasiskaart().addTo(map),
-		luchtfoto2017: Layers.luchtfoto2017().addTo(map),
-		// bgtlijngericht: Layers.bgtlijngericht().addTo(map),
-		// bgtpastel: Layers.bgtpastel().addTo(map)
-	});//.addTo(map);
-
-	if(options.scale !== false) {
-        L.control.scale({imperial: false}).addTo(map);
-	}
-
-	return map;
-}
-function setView(me, map, view, persist) {
-	beginUpdate(me);
-	map.once("moveend", function() {
-		endUpdate(me);
-	});
-	
-	map.setView(view[0], view[1]);
-	if(persist !== false) {
-		me.qsa("#state-persist").execute();
-	}
-}
 
 function beginUpdate(me) {
 	me.vars("updating", me.vars("updating") + 1);
@@ -70,7 +28,7 @@ var KEY_LEFT = Keyboard.getKeyCode("KEY_LEFT");
 var KEY_RIGHT = Keyboard.getKeyCode("KEY_RIGHT");
 
 var styles = {
-	"border-top": "1px solid silver",
+	// "border-top": "1px solid silver",
 	".map": "top:0;left:0;bottom:0;right:0;position:absolute;",
 	overflow: "hidden"
 };
@@ -117,6 +75,18 @@ var handlers = {
 	}
 };
 
+function setView(me, map, view, persist) {
+	beginUpdate(me);
+	map.once("moveend", function() {
+		endUpdate(me);
+	});
+	
+	map.setView(view[0], view[1], { /* animate */ });
+	if(persist !== false) {
+		me.qsa("#state-persist").execute();
+	}
+}
+
 ["Container, Store", { 
 	css: styles, 
 	handlers: handlers,
@@ -124,10 +94,11 @@ var handlers = {
     
    	onNodeCreated: function() {
 		var me = this;
-		var map = createMap(this._node.childNodes[0], {
+		var map = LeafletUtil.createMap(this, this._node.childNodes[0], {
+			crs: 28992,
 	 		center: [52, 5.3],
-			zoom: 2, maxZoom: 17
-		}, {});
+			zoom: 2
+		}, { emit: false });
 		
 		// TODO layeradd, layerremove?
 		["zoomlevelschange", "resize", "unload", "viewreset", "load", "zoomstart", "movestart", "zoom", "move", "zoomend", "moveend"].forEach(function(name) {
@@ -137,36 +108,10 @@ var handlers = {
 				});
 				
 		var cluster = L.markerClusterGroup({
-			disableClusteringAtZoom: 13,
-			// chunkedLoading: true,
-			// chunkDelay: 100,
-			// chunkProgress: function(processed, total, elapsed, layersArray) {
-			// 	var progress = $$('.markers-progress', container)[0];
-			// 	var progressBar = $$('.markers-progress-bar', container)[0];
-				
-			// 	if (elapsed > 100) {
-			// 		// if it takes more than a second to load, display the progress bar:
-			// 		progress.style.display = 'block';
-			// 		progressBar.style.width = Math.round(processed/total*100) + '%';
-			// 	}
-			// 	if (processed === total) {
-			// 		// all markers processed - hide the progress bar:
-			// 		progress.style.display = '';
-			// 	}
-			// }
+			disableClusteringAtZoom: 13
         });
         cluster.addTo(map);
 
-	// var markers = [];
-	// function addToCluster(marker) {
-	// 	markers.push(marker);
-	// 	me.setTimeout(function() { 
-	// 		markers.forEach(marker => marker.remove());
-	// 		cluster.addLayers(markers); 
-	// 		markers = []; 
-	// 	}, 100);
-	// }
-	        
 		var addLayer = map.addLayer;
 		map.addLayer = function(layer) {
 			return addLayer.apply(this, arguments);
@@ -227,7 +172,6 @@ var handlers = {
 	}
  
 }, [
-
 	["Executable", "state-persist", {
 		onExecute: function() {
 			var me = this._owner;
