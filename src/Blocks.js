@@ -359,8 +359,8 @@ define(function(require) {
         	}
         	
         	var factory = new Factory(require, uri || source[0] || "", sourceUri, options.setIsRoot || false);
-        	var p = new Promise(function(resolve, reject) {
-        		factory.load(source, function() {
+        	return new Promise((resolve, reject) => {
+        		factory.load(source, () => {
         			try {
         				var root = factory.newInstance(owner, uri, options);
         				if(typeof root.update === "function") root.update();
@@ -368,12 +368,8 @@ define(function(require) {
         			} catch(e) {
         				reject(e);
         			}
-        		}, function() {
-        			reject.apply(this, arguments);
-        		});
+        		}, reject);
         	});
-        	
-        	return p;
         },
         
 	    parse: parseBlock
