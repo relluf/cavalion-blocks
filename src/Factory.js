@@ -550,7 +550,7 @@ define(function(require) {
 			}
 		},
 		statics: {
-			
+
 			implicit_sources: {},
 			load: function(name, parentRequire, load, config) {
 				if(typeof window === "undefined") {
