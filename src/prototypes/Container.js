@@ -1,6 +1,6 @@
 "use strict";
 
-["vcl-ui:Panel", { 
-	align: "client"
+["vcl-ui:Form", { 
+	// align: "client"
 	
 }];

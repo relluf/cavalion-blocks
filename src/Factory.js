@@ -44,7 +44,7 @@ define(function(require) {
 	*/
 	var Blocks = require("./Blocks");
 	var parse = require("./Factory.parse");
-
+	
 	var Factory = require("js/defineClass");
 	var Class = require("js/Class");
 	var Type = require("js/Type");
@@ -656,6 +656,8 @@ define(function(require) {
 
 				requirejs.undef(String.format("blocks/Factory!%s", factory._uri));
 				requirejs.undef(Factory.makeTextUri(factory._uri));
+
+		    	console.info("blocks/Factory.unreq: " + name)
 
 			    var factories = factory._root.inherits;
 			    factories && factories.forEach(function(name) {
