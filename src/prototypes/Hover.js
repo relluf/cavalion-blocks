@@ -1,6 +1,4 @@
-["Container<>.glassy", {
-	classes: "with-shadow",
-
+[("Container<>.glassy.closex"), {
 	onLoad() {
 		let spec = this.getSpecializer(), uri;
 		
@@ -12,16 +10,11 @@
 			uri = spec;
 		}
 		
-		B.i([uri]).then(c => c.setParent && c.setParent(this));
+		B.i([uri]).then(c => c.set({
+			parent: this,
+			zoom: this.vars("zoom") || 1
+		}));
 		
 		return this.inherited(arguments);
 	}
-}, [
-	["Executable", ("close"), { 
-		content: "×",
-		on() { this._owner.destroy(); }// queryClose?}
-	}],
-
-	["Element", ("close-x"), { action: "close" }]
-
-]];
+}];
