@@ -1,3 +1,14 @@
+### 2023/09/30 - 0.9.37
+
+* Adds glassy classes for scrolled ListHeader
+* Hover<> now delegates its zoom property to the embedded blocks components
+
+### 2023/09/20 - 0.9.36
+
+* Hover<> now uses embedded blocks components uri to store its (appearance) properties
+
+### ???
+
 ### 2022/06/23 - 0.9.33
 
 * Removes dead code
