@@ -8,13 +8,11 @@
 		return this.inherited(arguments);	
 	},
 	onLoad() {
-		let spec = this.getSpecializer(), uri;
+		let spec = this.getSpecializer(), uri = this.vars("uri");
 		
 		// if spec is number maybe not set uri?
 		
-		if(!spec) {
-			uri = this.vars("uri");
-		} else {
+		if(!uri) {
 			uri = spec;
 		}
 		
@@ -26,11 +24,16 @@
 		return this.inherited(arguments);
 	},
 	overrides:{
+		renderZoom() {
+			const embedded = this.getControl(1);
+			if(embedded) {
+				embedded.set("zoom", this._zoom || 1);
+			}
+		},
 		getStorageKey(key) {
 			const su = this.vars("storage-uri");
 			if(su) {
-				this.print(js.sf("getStorageKey(%s): %s %s", key || "", su, key || ""));
-				
+				// this.print(js.sf("getStorageKey(%s): %s %s", key || "", su, key || ""));
 				return key === undefined ? su : js.sf("%s %s", su, key);
 			}
 			
