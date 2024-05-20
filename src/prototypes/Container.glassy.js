@@ -26,7 +26,7 @@ var WIDTH = 985, HEIGHT = 600, ZOOM_C = 1;
 			'border-radius': "5px",
 			'z-index': "1999",
 			// 'backdrop-filter': "blur(10px)",
-			'transition': "box-shadow 0.45s ease 0s, transform 0.45s ease 0s, left 0.45s ease 0s, right 0.45s ease 0s, top 0.45s ease 0s, bottom 0.45s ease 0s, width 0.45s ease 0s, height 0.45s ease 0s, border-width 0.45s ease 0s"
+			'transition': "box-shadow 0.45s ease 0s, transform 0.45s ease 0s, left 0.45s ease 0s, right 0.45s ease 0s, top 0.45s ease 0s, bottom 0.45s ease 0s, width 0.45s ease 0s, height 0.45s ease 0s, border-width 0.45s ease 0s",
 		},
 		'&:hover': {
 			'box-shadow': "0 0 10px 5px rgba(0,0,0,.2)",
@@ -49,6 +49,14 @@ var WIDTH = 985, HEIGHT = 600, ZOOM_C = 1;
 		'&.glassy-overlay > .client.no-margin': "margin:0;",
 		'&.right': "right: 40px; transform-origin: top right;",
 		'&.left': "left: 40px; transform-origin: top left;",
+
+			// "&.right": {
+			// 	'': "right: 5%; transform-origin: top right;",
+			// 	"&:not(:hover)": "margin-left:1px; transform: translate3d(75%, 0, 0);"
+			// },
+			// "&.left": {
+			// 	'': "left: 5%; transform-origin: top left;",
+			// },
 
 		'&.shrink-to-corner:not(:hover)': {
 			'width': 175 + "px",
@@ -95,7 +103,16 @@ var WIDTH = 985, HEIGHT = 600, ZOOM_C = 1;
 			'&:hover': {
 			}
 		},
-		'.seperator.seperator.seperator': "border-top: 1px solid rgba(155, 155, 155, 0.55);"
+		'.seperator.seperator.seperator': "border-top: 1px solid rgba(155, 155, 155, 0.55);",
+		
+		'&.phone': {
+			'': "width: 389px; border-radius:20px; box-shadow: 0 0 20px 10px rgba(0,0,0,.2);",
+			">.client": {
+				'': "border-radius: 20px;",
+				'iframe': "border-radius: 20px;"
+			}
+		}
+		
 	},
 	
 	onLoad() {
@@ -116,6 +133,7 @@ var WIDTH = 985, HEIGHT = 600, ZOOM_C = 1;
 	    		const dragger = this.inherited(arguments);
 				const ar1 = this.getAbsoluteRect();
 				let transform;
+				
 	    		dragger.override({
 	    			createHandles(evt) {
 						var ar = this._control.getAbsoluteRect();
@@ -128,6 +146,19 @@ var WIDTH = 985, HEIGHT = 600, ZOOM_C = 1;
     					transform = this._control._node.style.transform;
 	    			},
 	    			updateHandles(evt) {
+
+						if(evt.clientX === undefined) {
+							evt.clientX = dragger.clientX;
+							evt.clientY = dragger.clientY;
+							if(evt.clientX === undefined) {
+								this._control.print("ignoring drop without evt.clientX");
+								return;
+							}
+						}
+
+						dragger.clientX = evt.clientX; 
+						dragger.clientY = evt.clientY;
+
 	    				const style = this._control._node.style;
 	    				let cursor = style.cursor;
 	    				if(cursor === "") {
@@ -137,6 +168,7 @@ var WIDTH = 985, HEIGHT = 600, ZOOM_C = 1;
 							
 							style.transform = js.sf("%s translate3d(%dpx, %dpx, 0)", transform, eX - this._sx, eY - this._sy);
 	    				} else {
+	    					
 	    					var dx = evt.clientX - this._sx, dy = evt.clientY - this._sy;
 	    					var ar = js.mi(ar1);
 	    					
@@ -144,6 +176,7 @@ var WIDTH = 985, HEIGHT = 600, ZOOM_C = 1;
 	    					dy = parseInt(dy / 8, 10) * 8;
 	    					
 							cursor = cursor.split("-")[0].split("");
+// this._control.print(js.sf("%s - _sx: %s, _sy: %s, evt: %s %s | dx: %s, dy: %s", cursor, this._sx, this._sy, dx, dy, ar.left, ar.top, undefined, undefined, ar.width, ar.height))
 							
 							if(cursor.includes("w")) {
 	    						ar.left += dx;
@@ -158,7 +191,7 @@ var WIDTH = 985, HEIGHT = 600, ZOOM_C = 1;
 							} else if(cursor.includes("s")) {
 								ar.height += dy;
 							}
-
+// this._control.print(js.sf("dx: %s, dy: %s - setBounds(%s, %s, %s, %s, %s, %s)", dx, dy, ar.left, ar.top, undefined, undefined, ar.width, ar.height))
     						this._control.setBounds(ar.left, ar.top, undefined, undefined, ar.width, ar.height);
 	    				}
 	    			},
@@ -197,11 +230,13 @@ var WIDTH = 985, HEIGHT = 600, ZOOM_C = 1;
 					},
 	    			drop(evt) {
 	    				var cursor = this._control._node.style.cursor;
+	    				var clientX = evt.hasOwnProperty("clientX") ? evt.clientX : dragger.clientX;
+	    				var clientY = evt.hasOwnProperty("clientY") ? evt.clientY : dragger.clientY;
 	    				if(cursor === "") {
 							/** This will just move the control, override to change behaviour */
 							this._control.setBounds(
-								evt.clientX - this._sx + this._control.getLeft(), 
-								evt.clientY - this._sy + this._control.getTop()
+								clientX - this._sx + this._control.getLeft(), 
+								clientY - this._sy + this._control.getTop()
 							);
 	    				} else {
 		    				this.updateHandles(evt);
@@ -229,6 +264,9 @@ var WIDTH = 985, HEIGHT = 600, ZOOM_C = 1;
 	},
 	onNodeCreated() {
 		this.readStorage("bounds", (bounds) => {
+			if(typeof bounds === "string") {
+				try { bounds = JSON.parse(bounds); } catch(e) { bounds = null; }
+			}
 			if(bounds) {
 				this._width = bounds.width;
 				this._height = bounds.height;
@@ -259,7 +297,7 @@ var WIDTH = 985, HEIGHT = 600, ZOOM_C = 1;
 	},
 	onDragEnd(evt) {
 		this.removeClass("dragging");
-		this.writeStorage("bounds", this.getAbsoluteRect());
+		this.update(_=> this.writeStorage("bounds", js.sj(this.getAbsoluteRect())));
 	},
 	onMouseMove(evt) {
 		if(evt.altKey === true && evt.metaKey === true) {
@@ -278,8 +316,7 @@ var WIDTH = 985, HEIGHT = 600, ZOOM_C = 1;
 		}
 		this._node.style.cursor = cursor.length ? cursor.join("") + "-resize" : "";
 	},
-	
-	
+
 }, []];
 
 
