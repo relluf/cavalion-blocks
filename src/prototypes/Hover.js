@@ -18,6 +18,7 @@
 		
 		B.i([this.vars("storage-uri", uri || this.vars("storage-uri"))]).then(c => c.set({
 			parent: this,
+			owner: this,
 			zoom: this.vars("zoom") || 1
 		}));
 		
