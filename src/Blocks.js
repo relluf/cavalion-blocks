@@ -1,8 +1,5 @@
 define(function(require) {
 	
-	require("stylesheet!./blocks.less");
-	
-	// var PouchDB = require("pouchdb");
 	var Factory;
 
 	/*- TODO
