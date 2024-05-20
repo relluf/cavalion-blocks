@@ -1,3 +1,11 @@
+### 2024/05/20 - 0.9.38
+
+* **Hover**:
+	- Improves drag/drop- and persistent/size-behaviour
+	- Instantiated block components are owned by the Hover-component
+- Gets rid of dependency to blocks.less
+
+
 ### 2023/09/30 - 0.9.37
 
 * Adds glassy classes for scrolled ListHeader
