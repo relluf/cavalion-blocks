@@ -594,7 +594,8 @@ define(function(require) {
 					return instantiate(Factory.implicit_sources[name].source);
 				}
 				
-				// TODO maybe reject() should not be the fallback but rather resolve(null)
+				// TODO maybe reject() should not be the fallback but rather resolve(null) 
+				//	+ also: ".fallback" could be added (nice!y) to the uri
 				this.fetch(name).then(instantiate).catch(fallback);
 			},
 
