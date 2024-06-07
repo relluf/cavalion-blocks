@@ -649,14 +649,21 @@ define(function(require) {
 			},
 			unreq: function(name) {
 			    var factory;
-			    try {
-			        factory = require(String.format("vcl/Factory!%s", name));
-			    } catch(e) {
-			        return;
+			    
+			    if(name instanceof Factory) {
+			    	factory = name;
+			    } else {
+			    	name = String.format("blocks/Factory!%s", name);
+			    	if(window.require.s.contexts._.defined[name]) {
+		        		factory = require(name);
+			    	} else {
+			    		console.warn("(can) the puck stop(s) here?", name)
+			    		return;
+			    	}
 			    }
 
-				requirejs.undef(String.format("blocks/Factory!%s", factory._uri));
-				requirejs.undef(Factory.makeTextUri(factory._uri));
+				window.require.undef(String.format("blocks/Factory!%s", factory._uri));
+				window.require.undef(Factory.makeTextUri(factory._uri));
 
 		    	console.info("blocks/Factory.unreq: " + name)
 
