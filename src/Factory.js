@@ -109,15 +109,16 @@ define(function(require) {
 					setIsRoot = true;
 				}
 
-				var args = js.copy_args(arguments);
+				var args = js.copy_args(arguments), baseUri;
 				sourceUri = sourceUri || uri;
-
+				baseUri = sourceUri.split("!").pop();
+				
 /*- TODO clean up */				
 				function thisRequire(modules, success, error) {
 					if(modules instanceof Array) {
-						modules = modules.map(module => normalize(sourceUri.split("!").pop(), module));
+						modules = modules.map(module => normalize(baseUri, module));
 					} else {
-						modules = normalize(sourceUri.split("!").pop(), modules);
+						modules = normalize(baseUri, modules);
 					}
 // console.log(">>>", modules);
 					return parentRequire(modules, success, error);
@@ -126,6 +127,8 @@ define(function(require) {
 				for(var k in parentRequire) {
 					thisRequire[k] = parentRequire[k];
 				}
+				
+				thisRequire.toUrl = (url) => normalize(baseUri, url);
 
 				this._parentRequire = thisRequire;
 				this._uri = uri;
@@ -152,6 +155,7 @@ define(function(require) {
                 var me = this, uri = (this._sourceUri||this._uri).split("!").pop();
                 if(source && source.charAt && source.charAt(0) === "\"" && 
                 	source.indexOf("\"use strict\";") !== 0) {
+// this._source = source;
                 	if(source.indexOf("\"use ") === 0) {
                 		// TODO this should be the default
                 		source = "\"" + source.substring(5);
@@ -585,7 +589,7 @@ define(function(require) {
 							source: source, 
 							sourceUri: sourceUri
 						};
-						
+// console.log(name, "assuming", source)
 						instantiate(source);
 					});
 				}
@@ -596,6 +600,7 @@ define(function(require) {
 				
 				// TODO maybe reject() should not be the fallback but rather resolve(null) 
 				//	+ also: ".fallback" could be added (nice!y) to the uri
+// console.log(name, "fetch");
 				this.fetch(name).then(instantiate).catch(fallback);
 			},
 
@@ -662,7 +667,7 @@ define(function(require) {
 			    	}
 			    }
 
-				window.require.undef(String.format("blocks/Factory!%s", factory._uri));
+				window.require.undef(js.sf("blocks/Factory!%s", factory._uri));
 				window.require.undef(Factory.makeTextUri(factory._uri));
 
 		    	console.info("blocks/Factory.unreq: " + name)
