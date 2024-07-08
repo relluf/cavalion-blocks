@@ -1,3 +1,10 @@
+### 2024/07/07 - 0.9.39
+
+* **Factory**
+	* Implements thisRequire.toUrl
+	* Finetunes vcl/Factory.unreq
+
+
 ### 2024/05/20 - 0.9.38
 
 * **Hover**:
