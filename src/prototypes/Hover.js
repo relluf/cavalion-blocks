@@ -9,6 +9,11 @@
 	},
 	onLoad() {
 		let spec = this.getSpecializer(), uri = this.vars("uri");
+		let props = {
+			parent: this,
+			owner: this,
+			zoom: this.vars("zoom") || 1
+		};
 		
 		// if spec is number maybe not set uri?
 		
@@ -16,11 +21,13 @@
 			uri = spec;
 		}
 		
-		B.i([this.vars("storage-uri", uri || this.vars("storage-uri"))]).then(c => c.set({
-			parent: this,
-			owner: this,
-			zoom: this.vars("zoom") || 1
-		}));
+		B.i([this.vars("storage-uri", uri || this.vars("storage-uri"))], { 
+			loaded: (c) => { 
+				// alert("loaded delayed"); 
+				this.emit("container-ready", [c]);
+			}
+		})
+		.then(c => c.set(props).loaded() );
 		
 		return this.inherited(arguments);
 	},

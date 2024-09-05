@@ -45,7 +45,6 @@ var config = { text: locale("-text.default") }; //- defaults to name in "design 
 		"unselected": function() {
 			// this.app().print("unselected", this);
 		}
-		
 	},
 	vars: { 
 		"Alt+Cmd": function(console, evt) {

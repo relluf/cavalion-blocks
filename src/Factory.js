@@ -155,7 +155,7 @@ define(function(require) {
                 var me = this, uri = (this._sourceUri||this._uri).split("!").pop();
                 if(source && source.charAt && source.charAt(0) === "\"" && 
                 	source.indexOf("\"use strict\";") !== 0) {
-// this._source = source;
+this._source = source;
                 	if(source.indexOf("\"use ") === 0) {
                 		// TODO this should be the default
                 		source = "\"" + source.substring(5);
