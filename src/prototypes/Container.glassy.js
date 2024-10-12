@@ -1,119 +1,54 @@
-"use util/HtmlElement";
+"use util/HtmlElement, vcl/ui/Input, vcl/ui/List";
 
 var HE = require("util/HtmlElement");
 
-var WIDTH = 985, HEIGHT = 600, ZOOM_C = 1;
+function determinePosition(rectA, rectB) {
+    // Calculate the center point of rectB
+    const centerBX = rectB.x + rectB.width / 2;
+    const centerBY = rectB.y + rectB.height / 2;
+
+    // Divide rectA into thirds
+    const thirdWidth = rectA.width / 3;
+    const thirdHeight = rectA.height / 3;
+
+    // Define the boundaries of the grid
+    const leftBoundary = rectA.x + thirdWidth;
+    const rightBoundary = rectA.x + 2 * thirdWidth;
+    const topBoundary = rectA.y + thirdHeight;
+    const bottomBoundary = rectA.y + 2 * thirdHeight;
+
+    // Determine horizontal position
+    let horizontalPos;
+    if (centerBX < leftBoundary) {
+        horizontalPos = 'right';
+    } else if (centerBX < rightBoundary) {
+        horizontalPos = 'center';
+    } else {
+        horizontalPos = 'left';
+    }
+
+    // Determine vertical position
+    let verticalPos;
+    if (centerBY < topBoundary) {
+        verticalPos = 'bottom';
+    } else if (centerBY < bottomBoundary) {
+        verticalPos = 'middle';
+    } else {
+        verticalPos = 'top';
+    }
+
+    // Combine vertical and horizontal positions
+    const position = verticalPos + horizontalPos;
+    return position;
+}
 
 [("Container"), {
-	autoSize: "none", _autoPosition: "all", align: "none",
-	classes: "with-shadow",
+	autoSize: "none", _XautoPosition: "all", align: "none",
+	classes: "container-glassy with-shadow",
 	draggable: true,
 	
 	height: 500, width: 375,
 	top: 100, left: 200,
-	
-	css: { 
-		/* TODO CSS definitions must (eventually) be moved to App.glassy */
-		'': {
-			// 'height': HEIGHT + "px",
-			// 'width': WIDTH + "px",
-			'top': "5%", 
-			// 'height': "100%",
-			
-			'min-width': "54px",
-			'min-height': "54px",
-
-			'border-radius': "5px",
-			'z-index': "1999",
-			// 'backdrop-filter': "blur(10px)",
-			'transition': "box-shadow 0.45s ease 0s, transform 0.45s ease 0s, left 0.45s ease 0s, right 0.45s ease 0s, top 0.45s ease 0s, bottom 0.45s ease 0s, width 0.45s ease 0s, height 0.45s ease 0s, border-width 0.45s ease 0s",
-		},
-		'&:hover': {
-			'box-shadow': "0 0 10px 5px rgba(0,0,0,.2)",
-			'cursor': "move",
-			'.client': "border-color: rgba(56,127,217,0.025); background-color:rgba(155, 155, 155, 0.2);"
-		},
-		// '&.square': {
-		// 	'min-width': 175 + "px",
-		// 	'min-height': 175 + "px"
-		// },
-		'&.dragging': {
-			'transition': "box-shadow 0.15s ease 0s" || "transform 75ms ease-out 0s, left 75ms ease-out 0s, right 75ms ease-out 0s, top 75ms ease-out 0s, bottom 75ms ease-out 0s, width 75ms ease-out 0s, height 75ms ease-out 0s, border-width 0.45s ease 0s",
-
-			'box-shadow': "0 0 20px 10px rgba(0,0,0,.2)",
-			'.client': {
-				'border-color': "rgba(56,127,217,0.4)" || "rgba(255,215,0,0.75)"
-			}
-			
-		},
-		'&.glassy-overlay > .client.no-margin': "margin:0;",
-		'&.right': "right: 40px; transform-origin: top right;",
-		'&.left': "left: 40px; transform-origin: top left;",
-
-			// "&.right": {
-			// 	'': "right: 5%; transform-origin: top right;",
-			// 	"&:not(:hover)": "margin-left:1px; transform: translate3d(75%, 0, 0);"
-			// },
-			// "&.left": {
-			// 	'': "left: 5%; transform-origin: top left;",
-			// },
-
-		'&.shrink-to-corner:not(:hover)': {
-			'width': 175 + "px",
-			'height': 175 + "px"
-		},
-		'&:not(.no-transparent-effects)': {		
-			'*': "text-shadow: none;",
-			'.{List}': "border-radius:5px;",
-			'.{ListHeader}': {
-				'': "background-color:transparent;transition:background-color 1s ease 0s;", 
-				'&.scrolled': "background-color:rgba(255,255,255,0.75);", 
-				'>div': "background-image:none;border:none;font-weight:bold;"
-			},
-			'.{Input}': {
-				'input': 'background-color: rgba(255,255,255,0.2);',
-				'input:focus': 'background-color: rgba(255,255,255,0.9);'
-			},
-			
-			// '.{ListHeader}': { 
-			// 	'': "background-color:transparent;transition:background-color 0.5s ease 0s;", 
-			// 	':active': "background-color: gold;", //rgb(56, 121, 217);" } 
-			// 	'&.scrolled': "background-color:rgba(255,255,255,0.75);"
-			// }
-			
-		},
-		
-		'input': {
-			// 'flex': "1 1 0%",
-		    // 'transition': "width 0.5s ease 0s",
-		    // 'width': "150px"
-		    'padding': "5px",//"5px 24px",
-		    'border-radius': "5px",
-		    'border': "none",
-		    'background': "rgba(255, 255, 255, 0.2)"
-		},
-		
-		'.client': {
-			'position': "relative",
-			'border-radius': "5px",
-			'border': "7px solid rgba(0,0,0,0)",
-			// 'overflow': "hidden",
-			'height': "100%",
-			'transition': "border-color 0.45s ease 0s, background-color 0.45s ease 0s",
-			'&:hover': {
-			}
-		},
-		'.seperator.seperator.seperator': "border-top: 1px solid rgba(155, 155, 155, 0.55);",
-		
-		'&.phone': {
-			'': "width: 389px; border-radius:20px; box-shadow: 0 0 20px 10px rgba(0,0,0,.2);",
-			">.client": {
-				'': "border-radius: 20px;",
-				'iframe': "border-radius: 20px;"
-			}
-		}
-		
-	},
 	
 	onLoad() {
 		// TODO CVLN-20230608-1 // var parent = this.up("devtools/Workspace<>:root");
@@ -258,7 +193,7 @@ var WIDTH = 985, HEIGHT = 600, ZOOM_C = 1;
 			}
 		});
 	
-		this.print("onLoad", this);	
+		// this.print("onLoad", this);	
 		
 		return this.inherited(arguments);
 	},
@@ -298,6 +233,22 @@ var WIDTH = 985, HEIGHT = 600, ZOOM_C = 1;
 	onDragEnd(evt) {
 		this.removeClass("dragging");
 		this.update(_=> this.writeStorage("bounds", js.sj(this.getAbsoluteRect())));
+		
+		const rectA = this.getAbsoluteRect();
+		const rectB = this._parent.getAbsoluteRect();
+		
+		rectA.x = rectA.left; rectA.y = rectA.top;
+		rectB.x = rectB.left; rectB.y = rectB.top;
+		
+		const prev = this.vars("parent-position");
+		const curr = "parent-" + determinePosition(rectA, rectB);
+		if(prev !== curr) {
+			if(prev) {
+				this.removeClass(prev);
+			}
+			this.addClass(curr);
+		}
+		this.vars("parent-position", curr);
 	},
 	onMouseMove(evt) {
 		if(evt.altKey === true && evt.metaKey === true) {
@@ -318,59 +269,3 @@ var WIDTH = 985, HEIGHT = 600, ZOOM_C = 1;
 	},
 
 }, []];
-
-
-	// onMouseEnter(evt) { this.print("mouseenter", evt); },
-	// onMouseLeave(evt) { this.print("mouseleave", evt); },
-	// onMouseDown(evt) {
-	// 	// this.addClass("dragging");
-	// },
-	// onKeyUp(evt) {
-	// 	// this.removeClass("dragging");
-	// }
-	// ["veldapps/Map", [
-		
-	// 	["#tree", { visible: false }]
-		
-	// ]],
-	// ["Tree", { css: {
-	// 	'': "pointer-events:none;padding:10px;",
-	// 	'*': "pointer-events:all;"
-	// } }, [
-	
-	// 	["Node", {
-			
-	// 		text: "Root", expandable: true,
-	// 		onNodesNeeded(parent) {
-	// 			if(parent === this) {
-	// 				const Node = this.constructor; 
-	// 				([1,2,3].map(t => new Node({
-	// 					text: t, parent: parent
-	// 				})));
-	// 			}
-	// 			return false;
-	// 		}
-			
-	// 	}]	
-		
-	// ]],
-	
-	// ["Container", { css: "background-color: red;", align: "client" }]	
-	
-
-	       // renderZoom: function() {
-	       // 	/** @overriding vcl/ui/Panel - transform-origin will be set by css */
-	       // 	var zoomed = this.hasOwnProperty("_zoom");
-	       // 	var style = this._node.style;
-	       // 	if(zoomed) {
-	    			// style.transform = String.format("scale3d(%s, %s, 1)", this._zoom, this._zoom);
-	       // 	} else {
-	       // 		style.transform = "";
-	       // 	}
-	       // },
-	    	// dispatch(name, evt) {
-	    	// 	if(name.includes("drag")) {
-	    	// 		this.print(name, evt);
-	    	// 	}
-	    	// 	return this.inherited(arguments);
-	    	// },
