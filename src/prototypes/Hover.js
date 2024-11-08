@@ -12,7 +12,7 @@ const mouseout = (h, evt) => {
 		if(node) {
 			node.parentNode.removeChild(node);
 			h.removeVar("mousemove-overflow-node");
-			app.print(h, "(-) mousemove-overflow-node removed");
+			h.app().print(h, "(-) mousemove-overflow-node removed");
 		}
 
 		if(!h.hasClass("extend-hover")) {
@@ -20,19 +20,19 @@ const mouseout = (h, evt) => {
 			h.setTimeout("extend-hover", () => h.removeClass("extend-hover"), 650);
 		}
 		
-		// const style = h.getNode().style;
-		// if(!h.hasVar("transform-origin")) {
-		// 	h.vars("transform-origin", style.transformOrigin);
-		// 	h.setTimeout("restore-transform-origin", () => {
-		// 		// style.transition = "transform-origin 750ms";
-		// 		style.transformOrigin = h.removeVar("transform-origin");
-		// 		// h.setTimeout(() => style.transition = "", 750);
-		// 		// h.once("transitionend", () => h.app().toast({ content: "750ms ended", style: "fade glassy" }));
-		// 	}, 1000);
-		// }
+		const style = h.getNode().style;
+		if(!h.hasVar("transform-origin")) {
+			h.vars("transform-origin", style.transformOrigin);
+			h.setTimeout("restore-transform-origin", () => {
+				// style.transition = "transform-origin 750ms";
+				style.transformOrigin = h.removeVar("transform-origin");
+				// h.setTimeout(() => style.transition = "", 750);
+				// h.once("transitionend", () => h.app().toast({ content: "750ms ended", style: "fade glassy" }));
+			}, 1000);
+		}
 		// style.transformOrigin = js.sf("%.3f%% %.3f%%", px, py);
 
-		h.app().toast({ content: "out", classes: "glassy big fade" });
+		// h.app().toast({ content: "out", classes: "glassy big fade" });
 	});
 };
 const mouseover = (h, evt) => {
@@ -40,7 +40,7 @@ const mouseover = (h, evt) => {
 	
 	if(evt.shiftKey) { // showCoords
 		const toast = h.vars("toast", false, () => 
-			app.toast({ 
+			h.app().toast({ 
 				content: "!", classes: "fade glassy", 
 				timeout: false }));
 				
@@ -70,7 +70,7 @@ const garantee_overflow = (h, evt) => {
 		h.getNode().parentNode.appendChild(node);
 		h.vars("mousemove-overflow-node", node);
 		
-		app.print(h, "(+) mousemove-overflow-node created");
+		h.app().print(h, "(+) mousemove-overflow-node created");
 	}
 };
 
@@ -103,9 +103,7 @@ const garantee_overflow = (h, evt) => {
 			})
 			.then(c => c.set(props).loaded() );
 		});
-		
 		this.vars("load")();
-		
 		return this.inherited(arguments);
 	},
 	onDispatchChildEvent(component, name, evt, f, args) {
