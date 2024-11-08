@@ -1,6 +1,9 @@
-"use strict";
+"use B, font-awesome";
 
-["vcl:Application", {}, [
+const B = require("B");
 
-	
-]];
+["vcl-comps:App.v2.console", {
+	onLoad() {
+		B.DEFAULT_OWNER = this;
+	}
+}, []];
