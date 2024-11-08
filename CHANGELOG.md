@@ -1,3 +1,11 @@
+### 2024/11/08 - 0.9.41
+
+* Service build in favor of cavalion-code
+
+### 2024/11/07 - 0.9.40
+
+* ??
+
 ### 2024/07/07 - 0.9.39
 
 * **Factory**
