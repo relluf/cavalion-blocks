@@ -361,6 +361,15 @@ define(function(require) {
         			try {
         				var root = factory.newInstance(owner, uri, options);
         				if(typeof root.update === "function") root.update();
+        				
+        				if(options.parent) {
+        					root.set("parent", options.parent);
+        				}
+        				
+        				if(options.vars) {
+        					root.setVars(js.mi(root._vars || {}, vars));
+        				}
+        				
         				resolve(root);
         			} catch(e) {
         				reject(e);

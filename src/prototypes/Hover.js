@@ -77,7 +77,7 @@ const garantee_overflow = (h, evt) => {
 [("Container<>.glassy.closex"), {
 	css: {
 		'': "transition: transform 650ms;",
-		'&:not(:hover):not(:active):not(.extend-hover):not(.dragging)': "transform: scale3d(0.667, 0.667, 0.667);"
+		'&:not(:hover):not(:active):not(.extend-hover):not(.no-shrinking):not(.dragging)': "transform: scale3d(0.667, 0.667, 0.667);"
 	},
 	onLoad() {
 		this.vars("load", () => {
