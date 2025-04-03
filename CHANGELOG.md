@@ -1,3 +1,10 @@
+### 2024/04/03 - 0.9.42
+
+* 20250403 allows B.i to receive string for vars updates Map prototype
+* 20241119 first commit introduces prototypes/Loading
+* 20241119 adds support for parent and vars (B.i without []) updates Hover-styling
+* 20241111 does not allow to shrink while dragging
+
 ### 2024/11/08 - 0.9.41
 
 * Service build in favor of cavalion-code
