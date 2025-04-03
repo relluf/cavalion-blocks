@@ -112,6 +112,21 @@ define(function(require) {
 			children: mapArrFn(children || [], arguments.callee)
 		};
 	}
+	function parseVars(vars) {
+		if(typeof vars === "string") {
+    		if(vars.startsWith("{") && vars.endsWith("}")) {
+    			var v = {};
+    			vars.substring(1, vars.length - 1).split(";").forEach(kvp => {
+    				kvp = kvp.split("=");
+    				js.set(kvp.shift(), kvp.join("="), v);
+    			});
+    			vars = v;
+    		} else {
+    			vars = js.str2obj(vars);
+    		}
+		}
+		return vars;
+	}
 
 	var Blocks = {
 		POSTFIX_SPECIALIZED: "<>/",
@@ -367,7 +382,7 @@ define(function(require) {
         				}
         				
         				if(options.vars) {
-        					root.setVars(js.mi(root._vars || {}, vars));
+        					root.setVars(js.mi(root._vars || {}, parseVars(options.vars)));
         				}
         				
         				resolve(root);

@@ -41,6 +41,8 @@ const CARD_NEW = { label: "Nieuw...", icon: icon("uicons-bold-rounded/svg/fi-br-
 const cards_ = [ CARD_NEW,
 	{ label: "Avallo", icon: ppr("avallo/logo.png") },
 	{ label: "Koops", icon: ("/home/Workspaces/veldapps.com/Veldoffice/veldoffice-publiek-putten/resources/koops/KoopsGrondmechanica_telefoon.svg") },
+	{ label: "GT", icon: ("/home/Dropbox/Library/Application Icons/VeldwerkGT.png") },
+	{ label: "M", icon: ("/home/Dropbox/Library/Application Icons/VeldwerkM.png") },
 	{ label: "5942", icon: icon("2384952-geography/svg/001-america.svg") },
 	{ label: "PP", icon: icon("119570-landscapes-collection/svg/river.svg") },
 	{ label: "rapportage", icon: icon("2384952-geography/svg/046-Terrain.svg") },
@@ -101,7 +103,6 @@ const cards_ = [ CARD_NEW,
 		placeholder: "Zoeken (⌘/)",
 		onChange() {
 			this.setTimeout("update-filter", () => {
-				
 				const value = this.getValue().toLowerCase();
 				const parent = this.ud("#cards").getNode();
 				
@@ -114,8 +115,6 @@ const cards_ = [ CARD_NEW,
 						node.style.display = "none";
 					}
 				});
-				
-				
 			}, 100);
 		}
 		

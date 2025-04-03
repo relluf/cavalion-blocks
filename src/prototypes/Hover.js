@@ -83,10 +83,13 @@ const garantee_overflow = (h, evt) => {
 		this.vars("load", () => {
 			let spec = this.getSpecializer(), uri = this.vars("uri");
 			let props = {
-				parent: this,
-				owner: this,
-				zoom: this.vars("zoom") || 1
+				parent: this.vars("parent") || this,
+				owner: this.vars("owner") || this,
+				zoom: this.vars("zoom") || 1,
+				vars: this.vars("vars")
 			};
+			
+			if(!props.vars) delete props.vars;
 			
 			// if spec is number maybe not set uri?
 			
@@ -133,7 +136,7 @@ const garantee_overflow = (h, evt) => {
 		return this.inherited(arguments);
 	},
 	isRoot: true,
-	overrides:{
+	overrides: {
 		renderZoom() {
 			const embedded = this.getControl(1);
 			if(embedded) {

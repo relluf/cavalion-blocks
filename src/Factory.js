@@ -146,7 +146,7 @@ define(function(require) {
 			},
 			resolveUri: function(uri) {
 				if(uri.startsWith(".")) {
-					uri = String.format("%s$/%s", Factory.makeUri(this._uri), 
+					uri = String.format("%s$/%s", Factory.resolveUri(this._uri), 
 						uri);
 				}
 				return "text!" + uri;
