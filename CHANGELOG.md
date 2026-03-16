@@ -1,3 +1,34 @@
+### 2026/03/16 — Glassy container interaction and hover reload
+
+Refines the glassy container UX and the hover-loaded component lifecycle. It improves inherits parsing for comma-separated values, adds centralized cursor and resize handling, makes drag/move keyboard behavior safer, introduces fallback window-based bounds when no stored geometry exists, and refactors hover loading so embedded components can be cleanly reloaded in place. It also moves glassy transition styling into the container prototype and refreshes the loading overlay with a blur and pulse animation.
+
+* Improves `src/Blocks.js` parsing of string `inherits` by splitting on commas and trimming items instead of stripping all whitespace.
+* Fixes `inherits` handling for values that contain internal spaces.
+* Adds cursor utilities in `src/prototypes/Container.glassy.js` to centralize resize/move cursor detection and updates.
+* Adds `.override-cursor` styling and resize-aware cursor override for glassy containers.
+* Improves drag/resize behavior by treating `"move"` like the default move state during pointer and keyboard handling.
+* Fixes a crash path in keyboard drag completion by bailing out when `style.transform` is empty.
+* Adds default centered bounds initialization when stored `bounds` are missing, based on `#window` dimensions.
+* Refactors `onMouseMove` / child event handling so modifier keys update cursor state and can trigger drag-start consistently.
+* Improves `Container<>.glassy.closex` loading by extracting reusable `load()` and delayed `destroy()` helpers in `src/prototypes/Hover.js`.
+* Adds Alt+Shift click reload flow that unloads the component URI, detaches ownership, destroys the current root, and reloads it.
+* Preserves merged `vars` during hover-loaded component setup and propagates `no-shrinking` from component vars or URI classes.
+* Moves glassy shrink-transition CSS from `src/prototypes/Hover.js` into `src/prototypes/Container.glassy.js`.
+* Improves loading overlay visuals in `src/prototypes/Loading.js` with injected `pulse-opacity` animation, blur, and translucent background.
+* Chore: removes trailing whitespace / newline noise in `src/prototypes/Console.js`.
+
+
+### 2026/01/18 — Hover/container UX refinements + loader animation + inherits parsing
+
+- Changes `Blocks` inheritance parsing to split on commas and trim (instead of whitespace normalization), affecting how `"A, B"` style specs resolve.
+- Enhances glassy containers with cursor override + resize/move cursor logic and new “centered” default bounds when no stored bounds exist.
+- Tweaks drag/resize behavior to treat `"move"` like default cursor and apply cursor updates during key events and mouse move.
+- Refactors `Hover` loading/reload flow: centralizes load logic, propagates `vars` into loaded content, and auto-destroys the hover container when the loaded root is destroyed.
+- Adds an Alt+Shift click reload path that fully unloads/recreates the embedded component and then brings the hover to front.
+- Updates loading overlay visuals by injecting a one-time CSS keyframe animation and switching to a translucent blurred backdrop.
+- Minor cleanup in `prototypes/Console.js` (whitespace / EOF only).
+
+
 ### 2024/04/03 - 0.9.42
 
 * 20250403 allows B.i to receive string for vars updates Map prototype
