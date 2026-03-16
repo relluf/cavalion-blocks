@@ -1,4 +1,58 @@
 // getStorageKey might solve the problem/challenge with a not being able to specify (specializer) the (automagically created) Hover<>-instance (since it would lead to many implicit bases when dealing with long uri paths) embedding the actual blocks component of interest
+const classesByUri = (uri) => require("vcl/Component").getKeysByUri(uri).classes;
+
+const destroy = (h) => setTimeout(() => h.destroy(), 0);
+const load = (h) => {
+	let spec = h.getSpecializer(), uri = h.vars("uri");
+	let props = {
+		parent: h.vars("parent") || h,
+		owner: h.vars("owner") || h,
+		zoom: h.vars("zoom") || 1,
+		vars: h.vars("vars")
+	};
+	
+	if(!props.vars) delete props.vars;
+	
+	// if spec is number maybe not set uri?
+	
+	if(!uri) {
+		uri = spec;
+	}
+	
+	h.getVar("storage-uri", false, uri);
+	
+	B.i([uri], { 
+		loaded: (c) => { 
+
+			c.override("destroy", function() {
+				if(this._owner) {
+					destroy(this._owner);
+				}
+				return this.inherited(arguments);
+			});
+			
+			if(c._vars) {
+				js.mi(c._vars, props.vars);
+				delete props.vars;
+
+				const ns = "no-shrinking";
+				if(c.vars(ns) === true || classesByUri(uri).includes(ns)) {
+					h.addClass(ns);
+				}
+			}
+
+			h.vars("root", c);
+			h.emit("container-ready", [c]);
+		}
+	})
+	.then(c => {
+		c.beginLoading();
+		
+		c.set(props); // TODO mixin vars, but how?
+		c.endLoading();
+		c.loaded();
+	}); 
+};
 
 const mouseout = (h, evt) => {
 	const ar = h.vars("ar", false, () => h.getAbsoluteRect());
@@ -56,6 +110,25 @@ const mouseover = (h, evt) => {
 		toast.hide(2000);
 	}
 };
+const click = (h, evt) => {
+	if(evt.altKey && evt.shiftKey) {
+		const uri = h.vars("root").getUri();
+		evt.preventDefault();
+		if(confirm(js.sf("Reload %s?", uri))) {
+        	req("blocks/Factory").unreq(uri);
+        	
+        	const root = h.vars("root");
+
+			root.setOwner(null); 
+			delete root._owner; // weird bug
+			root.destroy();
+			
+			load(h);
+		}
+	}
+	h.nextTick(() => h.bringToFront());
+};
+
 const garantee_overflow = (h, evt) => {
 	const ar = h.vars("mousemove-absolute-rect", false, () => h.getAbsoluteRect());
 	
@@ -75,38 +148,11 @@ const garantee_overflow = (h, evt) => {
 };
 
 [("Container<>.glassy.closex"), {
-	css: {
-		'': "transition: transform 650ms;",
-		'&:not(:hover):not(:active):not(.extend-hover):not(.no-shrinking):not(.dragging)': "transform: scale3d(0.667, 0.667, 0.667);"
-	},
 	onLoad() {
-		this.vars("load", () => {
-			let spec = this.getSpecializer(), uri = this.vars("uri");
-			let props = {
-				parent: this.vars("parent") || this,
-				owner: this.vars("owner") || this,
-				zoom: this.vars("zoom") || 1,
-				vars: this.vars("vars")
-			};
-			
-			if(!props.vars) delete props.vars;
-			
-			// if spec is number maybe not set uri?
-			
-			if(!uri) {
-				uri = spec;
-			}
-			
-			B.i([this.vars("storage-uri", uri || this.vars("storage-uri"))], { 
-				loaded: (c) => { 
-					// alert("loaded delayed"); 
-					this.vars("root", c);
-					this.emit("container-ready", [c]);
-				}
-			})
-			.then(c => c.set(props).loaded() );
-		});
-		this.vars("load")();
+		this.vars("load", () => load(this));
+
+		load(this);
+		
 		return this.inherited(arguments);
 	},
 	onDispatchChildEvent(component, name, evt, f, args) {
@@ -115,14 +161,7 @@ const garantee_overflow = (h, evt) => {
 		} else if(name === "mouseout") {
 			mouseout(this, evt);
 		} else if(name === "click") {
-			if(evt.altKey && evt.shiftKey) {
-				evt.preventDefault();
-				if(confirm(js.sf("Reload %s?", this.vars("root").getUri()))) {
-					this.vars("root").destroy();
-					this.vars("load")();
-				}
-			}
-			this.nextTick(() => this.bringToFront());
+			click(this, evt);
 		}
 		return this.inherited(arguments);	
 	},

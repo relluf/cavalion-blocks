@@ -41,11 +41,47 @@ function determinePosition(rectA, rectB) {
     const position = verticalPos + horizontalPos;
     return position;
 }
+function setCursor(root, cursor) {
+	const rule = ".override-cursor *";
+	root._cssRules._rules[rule].style.cursor = cursor;
+	root._node.style.cursor = root._cssRules._rules[rule].style.cursor;
+}
+function getCursor(root, evt) {
+	var ar = root.getAbsoluteRect(), bw = 15, cursor = [];
+
+	if (evt.clientY < ar.top + bw) {
+		cursor.push("n");
+	} else if (evt.clientY > ar.top + ar.height - 2*bw) {
+		cursor.push("s");
+	}
+	if (evt.clientX < ar.left + bw) {
+		cursor.push("w");
+	} else if (evt.clientX > ar.left + ar.width - 2*bw) {
+		cursor.push("e");
+	}
+
+	return cursor.length ? cursor.join("") + "-resize" : "";
+}
 
 [("Container"), {
 	autoSize: "none", _XautoPosition: "all", align: "none",
-	classes: "container-glassy with-shadow",
+	classes: "container-glassy with-shadow override-cursor",
 	draggable: true,
+
+	css: {
+		'': "transition: transform 650ms;",
+		'&:not(:hover):not(:active):not(.extend-hover):not(.no-shrinking):not(.dragging)': "transform: scale3d(0.667, 0.667, 0.667);",
+		'&.override-cursor *': "cursor: default;",
+		'&.centerly': "top: 7.5%; bottom: 7.5%; left: 10%; right: 10%;",
+		
+	    "#editors-tabs:focus": {
+	    // ".{./Tabs}:focus": {
+	    	"": "transition: background-color ease-in 0.2s; background-color: rgba(244, 253, 255, 0.94);",
+	    	".selected": "border:1px solid rgb(57,121,204); background-color: rgb(57,121,204); color: white;",
+	    	".menu": "color: white;"
+	    }
+		
+	},
 	
 	height: 500, width: 375,
 	top: 100, left: 200,
@@ -96,7 +132,7 @@ function determinePosition(rectA, rectB) {
 
 	    				const style = this._control._node.style;
 	    				let cursor = style.cursor;
-	    				if(cursor === "") {
+	    				if(cursor === "" || cursor === "move") {
 							/** This will just move the control, override to change behaviour */
 							var eX = parseInt(evt.clientX / 8, 10) * 8;
 							var eY = parseInt(evt.clientY / 8, 10) * 8;
@@ -142,7 +178,7 @@ function determinePosition(rectA, rectB) {
 					keyup(evt) {
 						var r = this.inherited(arguments);	
 						if(this._cancelled !== true) {
-							if(this._control._node.style.cursor !== "") {
+							if(!["", "move"].includes(this._control._node.style.cursor)) {
 								var sh = (key) => parseInt(this._sizehandle.style[key], 10);
 								this._control.setBounds(sh("left"), sh("top"), 0, 0, sh("width"), sh("height"));
 								this.drop(evt);
@@ -150,7 +186,10 @@ function determinePosition(rectA, rectB) {
 								return r;
 							}
 		
-							var tx = this._control._node.style.transform.split("(")[1].split(",").map(s => s.trim());
+							var tx = this._control._node.style.transform;
+							if(tx === "") return; // have to bail out, smells like a bug
+							
+							tx = tx.split("(")[1].split(",").map(s => s.trim());
 
 							var x = parseInt(tx[0], 10) + this._control.getLeft();
 							var y = parseInt(tx[1], 10) + this._control.getTop();
@@ -167,7 +206,7 @@ function determinePosition(rectA, rectB) {
 	    				var cursor = this._control._node.style.cursor;
 	    				var clientX = evt.hasOwnProperty("clientX") ? evt.clientX : dragger.clientX;
 	    				var clientY = evt.hasOwnProperty("clientY") ? evt.clientY : dragger.clientY;
-	    				if(cursor === "") {
+	    				if(cursor === "" || cursor === "move") {
 							/** This will just move the control, override to change behaviour */
 							this._control.setBounds(
 								clientX - this._sx + this._control.getLeft(), 
@@ -198,6 +237,7 @@ function determinePosition(rectA, rectB) {
 		return this.inherited(arguments);
 	},
 	onNodeCreated() {
+		
 		this.readStorage("bounds", (bounds) => {
 			if(typeof bounds === "string") {
 				try { bounds = JSON.parse(bounds); } catch(e) { bounds = null; }
@@ -206,6 +246,16 @@ function determinePosition(rectA, rectB) {
 				this._width = bounds.width;
 				this._height = bounds.height;
 				this.setBounds(bounds.left, bounds.top, bounds.width, bounds.height);
+			} else {
+				const w = this.app().qs("#window");
+				if(w) {
+					const ar = w.getAbsoluteRect();
+					this.setBounds(
+						ar.width * 0.1, 
+						ar.height * 0.07, 
+						this._width = ar.width * 0.8, 
+						this._height = ar.height * 0.86);
+				}
 			}
 		});
 		
@@ -222,13 +272,30 @@ function determinePosition(rectA, rectB) {
 	},
 	
 	onDispatchChildEvent(component, name, evt, f, args) {
-		if(name === "mousemove" && evt.altKey === true && evt.metaKey === true) {
+		const BB = evt && (evt.altKey === true && evt.metaKey === true);
+		
+		if(name === "mousemove") {
 			this.onmousemove(evt);
+		} else if(name === "keydown" || name === "keyup") {
+			if(["", "move"].includes(this._node.style.cursor)) {
+				setCursor(this, BB ? getCursor(this, evt) || "move" : "");
+			}
 		}
+		
 		return this.inherited(arguments);
+	},
+	onMouseMove(evt) {
+		var BB = evt.altKey === true && evt.metaKey === true;
+		setCursor(this, BB ? getCursor(this, evt) || "move" : "");
+
+		if(BB) {
+			this.dispatch("dragstart", evt);
+		}
 	},
 	onDragStart(evt) {
 		this.addClass("dragging");
+		// this.set({ autoSize: "none", autoPosition: "none" });
+		// this.removeClass("centerly");
 	},
 	onDragEnd(evt) {
 		this.removeClass("dragging");
@@ -249,23 +316,6 @@ function determinePosition(rectA, rectB) {
 			this.addClass(curr);
 		}
 		this.vars("parent-position", curr);
-	},
-	onMouseMove(evt) {
-		if(evt.altKey === true && evt.metaKey === true) {
-			this.dispatch("dragstart", evt);
-		}
-		var ar = this.getAbsoluteRect(), bw = 7, cursor = [];
-		if (evt.clientY < ar.top + bw) {
-			cursor.push("n");
-		} else if (evt.clientY > ar.top + ar.height - 2*bw) {
-			cursor.push("s");
-		}
-		if (evt.clientX < ar.left + bw) {
-			cursor.push("w");
-		} else if (evt.clientX > ar.left + ar.width - 2*bw) {
-			cursor.push("e");
-		}
-		this._node.style.cursor = cursor.length ? cursor.join("") + "-resize" : "";
-	},
+	}
 
 }, []];

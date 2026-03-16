@@ -7,5 +7,4 @@
 			//this.app.on("app-console-toggle"
 		}
 	}
-	
 }];

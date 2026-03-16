@@ -19,7 +19,8 @@ define(function(require) {
 		var s = inherits;
     	if(typeof inherits === "string") {
     		if(inherits.charAt(0) !== "#") {
-    			inherits = inherits.replace(/\s/g, "").replace(/,/g, " ").split(" ");
+    			// inherits = inherits.replace(/\s/g, "").replace(/,/g, " ").split(" ");
+    			inherits = inherits.split(",").map(s => s.trim());
 
     			// ["Container", {}]
     			// ["vcl-comps:devtools/Workspace", "vcl"]
