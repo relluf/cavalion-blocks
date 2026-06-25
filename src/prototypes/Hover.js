@@ -20,7 +20,6 @@ const load = (h) => {
 	}
 	
 	h.getVar("storage-uri", false, uri);
-	
 	B.i([uri], { 
 		loaded: (c) => { 
 

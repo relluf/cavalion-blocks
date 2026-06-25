@@ -62,6 +62,22 @@ function getCursor(root, evt) {
 
 	return cursor.length ? cursor.join("") + "-resize" : "";
 }
+function mouseIsDown(evt) {
+	if(!evt) {
+		return false;
+	}
+	if(typeof evt.buttons === "number") {
+		return (evt.buttons & 1) === 1;
+	}
+	return evt.which === 1;
+}
+function clearPendingMouseDrag(root) {
+	const dispatcher = root.app && root.app()._dispatcher;
+	if(dispatcher) {
+		delete dispatcher._mousedown_drag;
+		delete dispatcher._mousedown_component;
+	}
+}
 
 [("Container"), {
 	autoSize: "none", _XautoPosition: "all", align: "none",
@@ -276,7 +292,14 @@ function getCursor(root, evt) {
 		
 		if(name === "mousemove") {
 			this.onmousemove(evt);
+		} else if(name === "mousedown") {
+			this.onmousedown(evt);
+		} else if(name === "mouseup") {
+			this.onmouseup(evt);
 		} else if(name === "keydown" || name === "keyup") {
+			if(name === "keyup") {
+				this.removeVar("keyboard-dragstart");
+			}
 			if(["", "move"].includes(this._node.style.cursor)) {
 				setCursor(this, BB ? getCursor(this, evt) || "move" : "");
 			}
@@ -284,20 +307,53 @@ function getCursor(root, evt) {
 		
 		return this.inherited(arguments);
 	},
+	onMouseDown(evt) {
+		var cursor = getCursor(this, evt);
+		if(cursor) {
+			this.vars("mousedown-cursor", cursor);
+			setCursor(this, cursor);
+		} else {
+			this.removeVar("mousedown-cursor");
+		}
+		return this.inherited(arguments);
+	},
 	onMouseMove(evt) {
 		var BB = evt.altKey === true && evt.metaKey === true;
-		setCursor(this, BB ? getCursor(this, evt) || "move" : "");
+		var down = mouseIsDown(evt);
+		var cursor = down ? this.vars("mousedown-cursor") || "" : getCursor(this, evt);
+		if(!down) {
+			this.removeVar("mousedown-cursor");
+		}
+		setCursor(this, cursor || (BB ? "move" : ""));
 
-		if(BB) {
+		if(down && cursor && !this.vars("keyboard-dragstart")) {
+			this.vars("keyboard-dragstart", true);
+			clearPendingMouseDrag(this);
+			this.dispatch("dragstart", evt);
+		} else if(BB && !this.vars("keyboard-dragstart")) {
+			this.vars("keyboard-dragstart", true);
 			this.dispatch("dragstart", evt);
 		}
 	},
+	onMouseUp(evt) {
+		this.removeVar("mousedown-cursor");
+		this.removeVar("keyboard-dragstart");
+		this.removeVar("active-dragstart");
+		return this.inherited(arguments);
+	},
 	onDragStart(evt) {
+		if(this.vars("active-dragstart")) {
+			return false;
+		}
+		this.vars("active-dragstart", true);
 		this.addClass("dragging");
 		// this.set({ autoSize: "none", autoPosition: "none" });
 		// this.removeClass("centerly");
 	},
 	onDragEnd(evt) {
+		this.removeVar("mousedown-cursor");
+		this.removeVar("keyboard-dragstart");
+		this.removeVar("active-dragstart");
 		this.removeClass("dragging");
 		this.update(_=> this.writeStorage("bounds", js.sj(this.getAbsoluteRect())));
 		

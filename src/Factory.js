@@ -44,6 +44,7 @@ define(function(require) {
 	*/
 	var Blocks = require("./Blocks");
 	var parse = require("./Factory.parse");
+	// var resolvePropertyValue = require("./Factory.resolvePropertyValue");
 	
 	var Factory = require("js/defineClass");
 	var Class = require("js/Class");
@@ -93,6 +94,12 @@ define(function(require) {
 			module = js.normalize(uri, module);
 		}
 		return module;
+	}
+	function resolvePropertyValue(property, component, value, node) {
+		// if(typeof value === "function" && property._type !== Type.EVENT && !property.isReference()) {
+			// value = value.call(component, component, property, node);
+		// }
+		return value;
 	}
 
 	return (Factory = Factory(require, {
@@ -498,17 +505,20 @@ this._source = source;
 								component.constructor, k, component, component._uri));
 					} else {
 						var value = node.properties[k];
-						this.setPropertyValue(property, component, value, fixUps);
+						this.setPropertyValue(property, component, value, fixUps, node);
 					}
 				}
 			},
-			setPropertyValue: function(property, component, value, fixUps) {
+			setPropertyValue: function(property, component, value, fixUps, node) {
 				/**
 				 * @param property
 				 * @param component
 				 * @param value
 				 * @param fixUps
+				 * @param node
 				 */
+				value = resolvePropertyValue(property, component, value, node);
+
 				if(property.isReference()) {
 					fixUps.push({
 						property: property,
