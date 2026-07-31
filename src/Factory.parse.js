@@ -47,6 +47,13 @@ define(["js/Deferred", "blocks/Blocks"], function(Deferred, Blocks) {
 			factories: [],
 			uri: Blocks.parseUri(uri)
 		};
+
+		function normalizeFactoryUri(base, uri) {
+			if(typeof uri === "string" && base.includes("<") && uri.startsWith("./")) {
+				uri = js.sf("./%s<%s>", base.split("<")[0].split("/").pop(), uri.substring(2));
+			}
+			return normalize(base, typeof uri === "string" ? uri : "");
+		}
 		
 		function walk(node) {
 			/**
@@ -65,7 +72,7 @@ define(["js/Deferred", "blocks/Blocks"], function(Deferred, Blocks) {
 				}
 
 				node.inherits.forEach(function(item, i) {
-					node.inherits[i] = item = normalize(uri, typeof item === "string" ? item : "");
+					node.inherits[i] = item = normalizeFactoryUri(uri, item);
 					item = String.format("blocks/Factory!%s", item);
 					if(tree.factories.indexOf(item) === -1) {
 						tree.factories.push(item);
