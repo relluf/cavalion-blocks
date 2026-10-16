@@ -1,3 +1,27 @@
+### `2026/10/16` - Factory source mapping, prototype scaffolds, and publishing utilities
+
+**Factory and source layout**
+
+- Fixes generated `sourceURL` values in [`src/Factory.parse.js`](src/Factory.parse.js) by preserving the complete resource URI instead of appending `.js`.
+- Adds [`src/Factory.implicit_sources.js`](src/Factory.implicit_sources.js) as an empty AMD registry for implicit sources.
+- Adds [`src/cavalion-blocks`](src/cavalion-blocks) as a symlink to the shared `cavalion-code` block source tree.
+
+**Prototype additions**
+
+- Adds [`src/prototypes/Graph.js`](src/prototypes/Graph.js) with an amCharts serial-graph scaffold and legend styling.
+- Adds [`src/prototypes/Timeline.js`](src/prototypes/Timeline.js) with an initial `#series-data` filter and amCharts timeline renderer.
+- Adds [`src/prototypes/Map.docs.js`](src/prototypes/Map.docs.js) with RD-projected OpenLayers configuration, Dutch base and domain layers, and document feature specializers.
+- Adds [`src/prototypes/Hover.phone.js`](src/prototypes/Hover.phone.js) with phone-oriented glassy hover sizing, rounding, and shadow styles.
+- Adds [`src/prototypes/Container.pseudo.js`](src/prototypes/Container.pseudo.js) as an empty specialization placeholder.
+- Mirrors these five prototype files from the source tree exposed by [`src/cavalion-blocks`](src/cavalion-blocks).
+
+**Publishing and repository metadata**
+
+- Adds [`cp-blocks-to-dropbox`](cp-blocks-to-dropbox) to replace selected Dropbox block directories and copy the complete prototype tree.
+- Adds [`publish-blocks`](publish-blocks) to run the Dropbox sync, edit the target package metadata, and publish it with npm.
+- Adds [`package-lock.json`](package-lock.json) with npm lockfile v1 metadata currently identifying version `0.9.13`.
+- Chore: adds Finder metadata in [`.DS_Store`](.DS_Store) and [`src/.DS_Store`](src/.DS_Store).
+
 ### `2026/06/24` - 0.9.43 Factory value resolution and glassy drag handling
 
 - Adds `resolvePropertyValue(...)` hook in `src/Factory.js`.

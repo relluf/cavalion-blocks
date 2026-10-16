@@ -110,7 +110,7 @@ define(["js/Deferred", "blocks/Blocks"], function(Deferred, Blocks) {
 		}
 
 		if(!(source instanceof Array)) {
-			source = String.format("%s\n//# sourceURL=http://%s/%s.js", source,
+			source = String.format("%s\n//# sourceURL=http://%s/%s", source,
 			    uri.indexOf(Blocks.PREFIX_PROTOTYPES) === 0 ? "blocks-prototypes" : "cavalion-blocks",
 			    devtoolsFriendly(uri));
 		}
